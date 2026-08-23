@@ -1,0 +1,54 @@
+[project]
+name = "chessvision"
+version = "0.1.0"
+description = "Chess board recognition toolkit"
+readme = "README.md"
+authors = [{ name = "Harshit Pawar", email = "hpchess64@gmail.com" }]
+requires-python = ">=3.12"
+dependencies = [
+    "typer>=0.27.1",
+]
+keywords = ["chess", "chessvision", "computer-vision", "machine-learning"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Games/Entertainment :: Board Games",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Image Recognition",
+    "Topic :: Utilities",
+]
+
+[project.urls]
+Homepage = "https://github.com/harshitpawar64/chessvision"
+Repository = "https://github.com/harshitpawar64/chessvision"
+Issues = "https://github.com/harshitpawar64/chessvision/issues"
+Changelog = "https://github.com/harshitpawar64/chessvision/blob/main/CHANGELOG.md"
+
+[project.scripts]
+chessvision = "chessvision.cli:app"
+
+[build-system]
+requires = ["uv_build>=0.12.3,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16.4",
+    "ty>=0.0.73",
+]
+
+[tool.ruff.format]
+skip-magic-trailing-comma = true
+
+[tool.ruff.lint]
+extend-select = ["I"]
+
+[tool.ruff.lint.isort]
+split-on-trailing-comma = false
