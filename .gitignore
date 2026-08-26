@@ -25,3 +25,8 @@ env/
 
 # ruff
 .ruff_cache/
+
+# Models
+*.onnx
+*.safetensors
+train/models/
