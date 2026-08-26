@@ -6,6 +6,7 @@ readme = "README.md"
 authors = [{ name = "Harshit Pawar", email = "hpchess64@gmail.com" }]
 requires-python = ">=3.12"
 dependencies = [
+    "pillow>=12.3.0",
     "typer>=0.27.1",
 ]
 keywords = ["chess", "chessvision", "computer-vision", "machine-learning"]
@@ -42,6 +43,9 @@ build-backend = "uv_build"
 dev = [
     "ruff>=0.16.4",
     "ty>=0.0.73",
+]
+train = [
+    "torch>=2.13.0",
 ]
 
 [tool.ruff.format]
