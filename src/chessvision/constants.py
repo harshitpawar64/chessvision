@@ -1,6 +1,4 @@
-from typing import Final
-
-PIECE_CLASSES: Final = (
+PIECE_CLASSES = (
     "empty",
     "wP",
     "wN",
@@ -16,4 +14,4 @@ PIECE_CLASSES: Final = (
     "bK",
 )
 
-CLASS_TO_IDX: Final = {cls_name: idx for idx, cls_name in enumerate(PIECE_CLASSES)}
+CLASS_TO_IDX = {cls_name: idx for idx, cls_name in enumerate(PIECE_CLASSES)}
