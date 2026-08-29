@@ -6,7 +6,10 @@ readme = "README.md"
 authors = [{ name = "Harshit Pawar", email = "hpchess64@gmail.com" }]
 requires-python = ">=3.12"
 dependencies = [
+    "numpy>=2.5.2",
+    "onnxruntime>=1.29.0",
     "pillow>=12.3.0",
+    "platformdirs>=4.11.4",
     "typer>=0.27.1",
 ]
 keywords = ["chess", "chessvision", "computer-vision", "machine-learning"]
