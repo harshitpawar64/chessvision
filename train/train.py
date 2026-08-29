@@ -1,5 +1,6 @@
 import time
 
+import onnx
 import torch
 from dataset import PIECE_CLASSES, TRAIN_DIR, ChessDataset
 from safetensors.torch import save_file
@@ -111,20 +112,21 @@ def main() -> None:
 
     MODELS_DIR.mkdir(parents=True, exist_ok=True)
 
+    metadata = {
+        "architecture": "mobilenet_v3_small",
+        "classes": ",".join(PIECE_CLASSES),
+        "image_size": str(IMAGE_SIZE),
+        "mean": ",".join(f"{x:.6f}" for x in transforms_meta.mean),
+        "std": ",".join(f"{x:.6f}" for x in transforms_meta.std),
+    }
+
     safetensors_path = MODELS_DIR / "chess_piece_classifier.safetensors"
-    save_file(
-        model.state_dict(),
-        safetensors_path,
-        metadata={
-            "architecture": "mobilenet_v3_small",
-            "classes": ",".join(PIECE_CLASSES),
-        },
-    )
+    save_file(model.state_dict(), safetensors_path, metadata=metadata)
     print(f"Saved SafeTensors model to {safetensors_path}")
 
     onnx_path = MODELS_DIR / "chess_piece_classifier.onnx"
     model.eval().to("cpu")
-    batch_dim = torch.export.Dim("batch_size", min=1, max=64)
+    batch_dim = torch.export.Dim("batch_size", min=1)
     torch.onnx.export(
         model,
         (torch.randn(1, 3, IMAGE_SIZE, IMAGE_SIZE),),
@@ -134,6 +136,14 @@ def main() -> None:
         dynamic_shapes=({0: batch_dim},),
         external_data=False,
     )
+
+    onnx_model = onnx.load(onnx_path)
+    for k, v in metadata.items():
+        meta = onnx_model.metadata_props.add()
+        meta.key = k
+        meta.value = v
+
+    onnx.save(onnx_model, onnx_path)
     print(f"Exported ONNX model to {onnx_path}")
 
 
