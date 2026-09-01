@@ -3,6 +3,7 @@ name = "chessvision"
 version = "0.2.0"
 description = "Chess board recognition toolkit"
 readme = "README.md"
+license = "MIT"
 authors = [{ name = "Harshit Pawar", email = "hpchess64@gmail.com" }]
 requires-python = ">=3.12"
 dependencies = [
@@ -12,7 +13,7 @@ dependencies = [
     "platformdirs>=4.11.4",
     "typer>=0.27.1",
 ]
-keywords = ["chess", "chessvision", "computer-vision", "machine-learning"]
+keywords = ["chess", "chessvision", "cli", "computer-vision", "machine-learning"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Console",
