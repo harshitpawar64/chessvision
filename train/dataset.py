@@ -6,7 +6,7 @@ from typing import Any
 from PIL import Image
 from torch.utils.data import Dataset
 
-from chessvision.constants import CLASS_TO_IDX, PIECE_CLASSES
+from chessvision.constants import CLASS_TO_INDEX, PIECE_CLASSES
 
 TRAIN_DIR = Path(__file__).resolve().parent
 BOARD_SQUARES_DIR = TRAIN_DIR / "assets" / "board_squares"
@@ -72,4 +72,4 @@ class ChessDataset(Dataset):
         if self.transform is not None:
             img = self.transform(img)
 
-        return img, CLASS_TO_IDX[label]
+        return img, CLASS_TO_INDEX[label]
