@@ -22,7 +22,7 @@ class PieceClassifier:
     def __init__(self) -> None:
         self.model_path = self._get_model_path()
 
-        self.session = ort.InferenceSession(str(self.model_path))
+        self.session = ort.InferenceSession(self.model_path)
         self.input_name = self.session.get_inputs()[0].name
         self.output_name = self.session.get_outputs()[0].name
 
@@ -30,12 +30,8 @@ class PieceClassifier:
 
         self.image_size = int(metadata["image_size"])
 
-        self.mean = np.array(
-            [float(x) for x in metadata["mean"].split(",")], dtype=np.float32
-        )
-        self.std = np.array(
-            [float(x) for x in metadata["std"].split(",")], dtype=np.float32
-        )
+        self.mean = np.array([x for x in metadata["mean"].split(",")], dtype=np.float32)
+        self.std = np.array([x for x in metadata["std"].split(",")], dtype=np.float32)
 
     def predict_square(
         self, image: Image.Image | Path | str | np.ndarray
@@ -48,7 +44,7 @@ class PieceClassifier:
 
         label = PIECE_CLASSES[prediction_index]
 
-        return SquarePrediction(label=label, confidence=float(probs[prediction_index]))
+        return SquarePrediction(label=label, confidence=probs[prediction_index])
 
     def predict_squares(
         self, images: Sequence[Image.Image | Path | str | np.ndarray]
@@ -62,9 +58,7 @@ class PieceClassifier:
         prediction_indices = np.argmax(probs, axis=1)
 
         return [
-            SquarePrediction(
-                label=PIECE_CLASSES[index], confidence=float(probs[i, index])
-            )
+            SquarePrediction(label=PIECE_CLASSES[index], confidence=probs[i, index])
             for i, index in enumerate(prediction_indices)
         ]
 
