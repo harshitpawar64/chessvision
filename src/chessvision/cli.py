@@ -3,7 +3,13 @@ from typing import Annotated
 
 import typer
 
-from chessvision import PieceClassifier, __version__
+from chessvision import (
+    BoardPredictor,
+    Castling,
+    Orientation,
+    PieceClassifier,
+    __version__,
+)
 
 app = typer.Typer()
 
@@ -26,6 +32,36 @@ def square(
     prediction = classifier.predict_square(image)
 
     print(f"{prediction.label} [{prediction.confidence:.2%}]")
+
+
+@app.command()
+def board(
+    image: Annotated[
+        Path,
+        typer.Argument(
+            exists=True,
+            file_okay=True,
+            dir_okay=False,
+            readable=True,
+            help="Path to full chessboard image.",
+        ),
+    ],
+    orientation: Annotated[
+        Orientation, typer.Option("--orientation", "-o", help="Board perspective.")
+    ] = Orientation.WHITE,
+    castling: Annotated[
+        Castling, typer.Option("--castling", "-c", help="Castling availability.")
+    ] = Castling.NONE,
+) -> None:
+    """Predict the chess position on a chessboard image."""
+    predictor = BoardPredictor()
+    prediction = predictor.predict(
+        image, orientation=orientation, active_color="w", castling=castling
+    )
+
+    print(prediction.render_board + "\n")
+    print(f"FEN: {prediction.fen}")
+    print(f"Confidence: {prediction.confidence:.2%}")
 
 
 def version_callback(value: bool) -> None:
