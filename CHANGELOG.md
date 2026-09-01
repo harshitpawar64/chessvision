@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.3.0](https://github.com/harshitpawar64/chessvision/compare/v0.2.0...v0.3.0) (2026-09-01)
+
+
+### Features
+
+* **board:** implement BoardPredictor and FEN generation pipeline ([e2845f9](https://github.com/harshitpawar64/chessvision/commit/e2845f9cc65e2d9ab9b2ebb14764055e86e2b390))
+* **cli:** add board prediction command ([f9e68b4](https://github.com/harshitpawar64/chessvision/commit/f9e68b49a4f2a45f8af63c667f7d7f0d6be67181))
+* **constants:** add orientation and castling enums with piece symbol mappings ([302ed87](https://github.com/harshitpawar64/chessvision/commit/302ed875f7c7fa7d3f7bacf3cc83861b55130a94))
+
+
+### Refactor
+
+* **classifier:** clean up redundant type casts ([32c97d7](https://github.com/harshitpawar64/chessvision/commit/32c97d77d2f8e4b5b9fc54ba637448585a8be3e3))
+
+
+### Documentation
+
+* **readme:** update README and add demo assets ([66b55e6](https://github.com/harshitpawar64/chessvision/commit/66b55e6de749851dd8b0365292c0229b94b48586))
+
 ## [0.2.0](https://github.com/harshitpawar64/chessvision/compare/v0.1.0...v0.2.0) (2026-08-29)
 
 
