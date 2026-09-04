@@ -82,6 +82,7 @@ for prediction in batch_predictions:
 |-----------------|:---------:|:-----------:|-----------------------------------------------------------------------|
 | `--orientation` |    `-o`   |   `white`   | Board perspective (`white` or `black`).                               |
 | `--castling`    |    `-c`   |     `-`     | Castling availability (see [castling options](#castling-options)).    |
+| `--open`        |           |   `False`   | Open position directly in Lichess editor.                             |
 
 #### Castling Options
 

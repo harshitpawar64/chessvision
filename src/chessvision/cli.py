@@ -52,6 +52,9 @@ def board(
     castling: Annotated[
         Castling, typer.Option("--castling", "-c", help="Castling availability.")
     ] = Castling.NONE,
+    open_in_browser: Annotated[
+        bool, typer.Option("--open", help="Open position in Lichess editor.")
+    ] = False,
 ) -> None:
     """Predict the chess position on a chessboard image."""
     predictor = BoardPredictor()
@@ -62,6 +65,9 @@ def board(
     print(prediction.render_board + "\n")
     print(f"FEN: {prediction.fen}")
     print(f"Confidence: {prediction.confidence:.2%}")
+
+    if open_in_browser:
+        typer.launch(prediction.url)
 
 
 def version_callback(value: bool) -> None:
