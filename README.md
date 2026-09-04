@@ -59,6 +59,7 @@ prediction = predictor.predict(
 print(prediction.render_board)
 print(f"FEN: {prediction.fen}")
 print(f"Confidence: {prediction.confidence:.2%}")
+print(f"URL: {prediction.url}")
 
 # 2. Single Square Classification
 classifier = PieceClassifier()
@@ -103,6 +104,9 @@ chessvision board chessboard.png -o black
 # Specify castling availability
 chessvision board chessboard.png --castling KQkq
 chessvision board chessboard.png -c KQ
+
+# Open position directly in Lichess editor
+chessvision board chessboard.png --open
 ```
 
 ### `chessvision square`

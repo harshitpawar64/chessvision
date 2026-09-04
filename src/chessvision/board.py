@@ -33,6 +33,11 @@ class BoardPrediction:
         lines.append(header)
         return "\n".join(lines)
 
+    @property
+    def url(self) -> str:
+        fen_slug = self.fen.replace(" ", "_")
+        return f"https://lichess.org/editor/{fen_slug}?color={self.orientation}"
+
 
 class BoardPredictor:
     def __init__(self, classifier: PieceClassifier | None = None) -> None:
