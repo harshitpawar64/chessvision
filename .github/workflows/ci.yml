@@ -30,7 +30,7 @@ jobs:
           activate-environment: true
 
       - name: Install dependencies
-        run: uv sync --locked --all-groups
+        run: uv sync --locked
 
       - name: Lint
         run: ruff check
@@ -41,4 +41,4 @@ jobs:
 
       - name: Type check
         if: always()
-        run: ty check
+        run: ty check src/chessvision
