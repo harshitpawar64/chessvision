@@ -48,7 +48,14 @@ chessvision square square.png
 ### Python API
 
 ```python
-from chessvision import BoardPredictor, Castling, Orientation, PieceClassifier, Turn
+from chessvision import (
+    BoardDetector,
+    BoardPredictor,
+    Castling,
+    Orientation,
+    PieceClassifier,
+    Turn,
+)
 
 # 1. Full Board Recognition
 predictor = BoardPredictor()
@@ -64,12 +71,20 @@ print(f"FEN: {prediction.fen}")
 print(f"Confidence: {prediction.confidence:.2%}")
 print(f"URL: {prediction.url}")
 
-# 2. Single Square Classification
+# 2. Multi-Board Detection
+detector = BoardDetector()
+boards = detector.detect("page.png")  # Returns list of cropped PIL Images
+
+for board in boards:
+    prediction = predictor.predict(board)
+    print(prediction.fen)
+
+# 3. Single Square Classification
 classifier = PieceClassifier()
 square_prediction = classifier.predict_square("square.png")
 print(f"{square_prediction.label} [{square_prediction.confidence:.2%}]")
 
-# 3. Batch Squares Classification
+# 4. Batch Squares Classification
 batch_predictions = classifier.predict_squares(["e4.png", "e5.png"])
 for prediction in batch_predictions:
     print(f"{prediction.label} [{prediction.confidence:.2%}]")
