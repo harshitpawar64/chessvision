@@ -48,12 +48,15 @@ chessvision square square.png
 ### Python API
 
 ```python
-from chessvision import BoardPredictor, Castling, Orientation, PieceClassifier
+from chessvision import BoardPredictor, Castling, Orientation, PieceClassifier, Turn
 
 # 1. Full Board Recognition
 predictor = BoardPredictor()
 prediction = predictor.predict(
-    "chessboard.png", orientation=Orientation.WHITE, castling=Castling.ALL
+    "chessboard.png",
+    orientation=Orientation.WHITE,
+    active_color=Turn.WHITE,
+    castling=Castling.ALL,
 )
 
 print(prediction.render_board)
@@ -81,6 +84,7 @@ for prediction in batch_predictions:
 | **Flag**        | **Short** | **Default** | **Description**                                                       |
 |-----------------|:---------:|:-----------:|-----------------------------------------------------------------------|
 | `--orientation` |    `-o`   |   `white`   | Board perspective (`white` or `black`).                               |
+| `--turn`        |    `-t`   |   `white`   | Side to move (`white` or `black`).                                    |
 | `--castling`    |    `-c`   |     `-`     | Castling availability (see [castling options](#castling-options)).    |
 | `--open`        |           |   `False`   | Open position directly in Lichess editor.                             |
 
@@ -105,6 +109,10 @@ chessvision board chessboard.png -o black
 # Specify castling availability
 chessvision board chessboard.png --castling KQkq
 chessvision board chessboard.png -c KQ
+
+# Specify side to move (white or black)
+chessvision board chessboard.png --turn black
+chessvision board chessboard.png -t black
 
 # Open position directly in Lichess editor
 chessvision board chessboard.png --open

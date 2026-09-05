@@ -8,6 +8,7 @@ from chessvision import (
     Castling,
     Orientation,
     PieceClassifier,
+    Turn,
     __version__,
 )
 
@@ -49,6 +50,9 @@ def board(
     orientation: Annotated[
         Orientation, typer.Option("--orientation", "-o", help="Board perspective.")
     ] = Orientation.WHITE,
+    turn: Annotated[
+        Turn, typer.Option("--turn", "-t", help="Side to move.")
+    ] = Turn.WHITE,
     castling: Annotated[
         Castling, typer.Option("--castling", "-c", help="Castling availability.")
     ] = Castling.NONE,
@@ -59,7 +63,7 @@ def board(
     """Predict the chess position on a chessboard image."""
     predictor = BoardPredictor()
     prediction = predictor.predict(
-        image, orientation=orientation, active_color="w", castling=castling
+        image, orientation=orientation, active_color=turn, castling=castling
     )
 
     print(prediction.render_board + "\n")
