@@ -6,7 +6,7 @@ import numpy as np
 from PIL import Image
 
 from chessvision.classifier import PieceClassifier, SquarePrediction
-from chessvision.constants import PIECES, Castling, Orientation
+from chessvision.constants import PIECES, Castling, Orientation, Turn
 
 
 @dataclass(frozen=True, slots=True)
@@ -47,7 +47,7 @@ class BoardPredictor:
         self,
         image: Image.Image | Path | str | np.ndarray,
         orientation: Orientation = Orientation.WHITE,
-        active_color: str = "w",
+        active_color: Turn = Turn.WHITE,
         castling: Castling = Castling.NONE,
     ) -> BoardPrediction:
         square_images, coordinates = slice_board(image, orientation=orientation)
@@ -74,7 +74,7 @@ class BoardPredictor:
     @staticmethod
     def fen(
         square_map: dict[str, SquarePrediction],
-        active_color: str = "w",
+        active_color: Turn = Turn.WHITE,
         castling: Castling = Castling.NONE,
         en_passant: str = "-",
         halfmove: int = 0,
@@ -90,9 +90,7 @@ class BoardPredictor:
         )
         placement = re.sub(r"\.+", lambda m: str(len(m.group())), raw)
 
-        return (
-            f"{placement} {active_color} {castling} {en_passant} {halfmove} {fullmove}"
-        )
+        return f"{placement} {active_color.symbol} {castling} {en_passant} {halfmove} {fullmove}"
 
 
 def slice_board(
