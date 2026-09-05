@@ -41,6 +41,15 @@ class Orientation(StrEnum):
         return [f"{file}{rank}" for rank in self.ranks for file in self.files]
 
 
+class Turn(StrEnum):
+    WHITE = auto()
+    BLACK = auto()
+
+    @property
+    def symbol(self) -> str:
+        return "w" if self is Turn.WHITE else "b"
+
+
 class Castling(StrEnum):
     WHITE = "KQ"
     BLACK = "kq"
