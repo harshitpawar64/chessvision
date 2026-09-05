@@ -4,6 +4,7 @@ from typing import Annotated
 import typer
 
 from chessvision import (
+    BoardDetector,
     BoardPredictor,
     Castling,
     Orientation,
@@ -44,7 +45,7 @@ def board(
             file_okay=True,
             dir_okay=False,
             readable=True,
-            help="Path to full chessboard image.",
+            help="Path to image.",
         ),
     ],
     orientation: Annotated[
@@ -60,18 +61,35 @@ def board(
         bool, typer.Option("--open", help="Open position in Lichess editor.")
     ] = False,
 ) -> None:
-    """Predict the chess position on a chessboard image."""
+    """Predicts chess positions from a chessboard image."""
+    detector = BoardDetector()
+    boards = detector.detect(image)
+
+    if not boards:
+        typer.secho(
+            "No chessboard detected in the image.", fg=typer.colors.RED, err=True
+        )
+        raise typer.Exit(1)
+
     predictor = BoardPredictor()
-    prediction = predictor.predict(
-        image, orientation=orientation, active_color=turn, castling=castling
-    )
 
-    print(prediction.render_board + "\n")
-    print(f"FEN: {prediction.fen}")
-    print(f"Confidence: {prediction.confidence:.2%}")
+    for i, board_img in enumerate(boards, 1):
+        if len(boards) > 1:
+            print(f"--- Board #{i} ---")
 
-    if open_in_browser:
-        typer.launch(prediction.url)
+        prediction = predictor.predict(
+            board_img, orientation=orientation, active_color=turn, castling=castling
+        )
+
+        print(prediction.render_board + "\n")
+        print(f"FEN: {prediction.fen}")
+        print(f"Confidence: {prediction.confidence:.2%}")
+
+        if len(boards) > 1 and i < len(boards):
+            print()
+
+        if open_in_browser:
+            typer.launch(prediction.url)
 
 
 def version_callback(value: bool) -> None:

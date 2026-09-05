@@ -38,7 +38,7 @@ pip install chessvision
 ### CLI
 
 ```bash
-# Predict chess position on a full board image
+# Predict chess positions from a board, screenshot, or book page
 chessvision board chessboard.png
 
 # Predict a single square image
