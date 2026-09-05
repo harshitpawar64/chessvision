@@ -3,7 +3,7 @@ from chessvision.classifier import PieceClassifier, SquarePrediction
 from chessvision.constants import Castling, Orientation, Turn
 from chessvision.detector import BoardDetector
 
-__version__ = "0.3.0"  # x-release-please-version
+__version__ = "0.4.0"  # x-release-please-version
 
 __all__ = [
     "BoardDetector",

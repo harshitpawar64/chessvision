@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.0](https://github.com/harshitpawar64/chessvision/compare/v0.3.0...v0.4.0) (2026-09-05)
+
+
+### Features
+
+* **board:** add url property to BoardPrediction ([9756156](https://github.com/harshitpawar64/chessvision/commit/97561564e004de7631c810396a5430594405d000))
+* **board:** use Turn enum for active color parameter ([4220604](https://github.com/harshitpawar64/chessvision/commit/42206049715b6320b2182458898aad2bb137dba8))
+* **cli:** add --open flag to open position in lichess editor ([b57e74d](https://github.com/harshitpawar64/chessvision/commit/b57e74d18d0af2dd8c04bb07b930cc5556926d23))
+* **cli:** add --turn flag to specify side to move ([f0d4204](https://github.com/harshitpawar64/chessvision/commit/f0d4204e8aea591b3317b10d90f4173da85bda21))
+* **cli:** support multi-board detection in board prediction command ([5d124d6](https://github.com/harshitpawar64/chessvision/commit/5d124d671786496cd2e0ae74179022c1e65c8be9))
+* **constants:** add turn enum to specify side to move ([2eb1e48](https://github.com/harshitpawar64/chessvision/commit/2eb1e480ce0a788574e2d622a88fb31613ebb340))
+* **detector:** implement BoardDetector for multi-board detection ([d2df679](https://github.com/harshitpawar64/chessvision/commit/d2df679cdc496368fe6f5614505189589f891bd1))
+
 ## [0.3.0](https://github.com/harshitpawar64/chessvision/compare/v0.2.0...v0.3.0) (2026-09-01)
 
 
