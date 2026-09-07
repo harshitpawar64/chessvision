@@ -2,6 +2,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
+import chess
 import numpy as np
 from PIL import Image
 
@@ -15,6 +16,13 @@ class BoardPrediction:
     squares: dict[str, SquarePrediction]
     confidence: float
     orientation: Orientation
+
+    @property
+    def is_valid(self) -> bool:
+        try:
+            return chess.Board(self.fen).is_valid()
+        except ValueError:
+            return False
 
     @property
     def render_board(self) -> str:
