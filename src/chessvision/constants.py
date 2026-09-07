@@ -18,7 +18,7 @@ PIECES = {
 
 PIECE_CLASSES = tuple(PIECES)
 
-CLASS_TO_INDEX = {cls_name: idx for idx, cls_name in enumerate(PIECES)}
+CLASS_TO_INDEX = {cls_name: index for index, cls_name in enumerate(PIECES)}
 
 _RANKS = ("1", "2", "3", "4", "5", "6", "7", "8")
 _FILES = ("a", "b", "c", "d", "e", "f", "g", "h")
