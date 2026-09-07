@@ -85,6 +85,9 @@ def board(
         print(f"FEN: {prediction.fen}")
         print(f"Confidence: {prediction.confidence:.2%}")
 
+        if not prediction.is_valid:
+            typer.secho("Illegal position detected.", fg=typer.colors.YELLOW, err=True)
+
         if len(boards) > 1 and i < len(boards):
             print()
 
