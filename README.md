@@ -6,6 +6,7 @@
 [![uv](https://img.shields.io/badge/uv-black.svg?logo=uv)](https://docs.astral.sh/uv/)
 [![ruff](https://img.shields.io/badge/ruff-black.svg?logo=ruff)](https://docs.astral.sh/ruff/)
 [![ty](https://img.shields.io/badge/ty-black.svg?logo=ty)](https://docs.astral.sh/ty/)
+[![pytest](https://img.shields.io/badge/pytest-black.svg?logo=pytest)](https://docs.pytest.org/)
 
 A fast, lightweight chess board and piece recognition toolkit.
 
