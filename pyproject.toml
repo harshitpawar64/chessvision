@@ -47,6 +47,8 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
     "ruff>=0.16.4",
     "ty>=0.0.73",
 ]
@@ -66,3 +68,6 @@ extend-select = ["I"]
 
 [tool.ruff.lint.isort]
 split-on-trailing-comma = false
+
+[tool.pytest.ini_options]
+addopts = "--cov=chessvision --cov-report=term-missing --cov-report=xml --cov-branch -v"
