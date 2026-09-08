@@ -19,8 +19,8 @@ class SquarePrediction:
 
 
 class PieceClassifier:
-    def __init__(self) -> None:
-        self.model_path = self._get_model_path()
+    def __init__(self, model_path: Path | str | None = None) -> None:
+        self.model_path = Path(model_path) if model_path else self.get_model_path()
 
         self.session = ort.InferenceSession(self.model_path)
         self.input_name = self.session.get_inputs()[0].name
@@ -62,6 +62,32 @@ class PieceClassifier:
             for i, index in enumerate(prediction_indices)
         ]
 
+    @staticmethod
+    def get_model_path(cache_dir: Path | str | None = None) -> Path:
+        MODEL_NAME = "chess_piece_classifier.onnx"
+
+        model_path = (
+            Path(cache_dir)
+            if cache_dir
+            else user_cache_path("chessvision", ensure_exists=True)
+        ) / MODEL_NAME
+
+        if model_path.exists():
+            return model_path
+
+        url = f"https://huggingface.co/harshitpawar64/chessvision/resolve/main/{MODEL_NAME}"
+
+        temp_path = model_path.with_suffix(".tmp")
+
+        try:
+            urllib.request.urlretrieve(url, temp_path)
+            temp_path.replace(model_path)
+        except urllib.error.URLError as e:
+            temp_path.unlink(missing_ok=True)
+            raise RuntimeError(f"Failed to download model from {url}: {e}") from e
+
+        return model_path
+
     def _preprocess_single(
         self, image: Image.Image | Path | str | np.ndarray
     ) -> np.ndarray:
@@ -86,25 +112,3 @@ class PieceClassifier:
         shifted = logits - np.max(logits, axis=-1, keepdims=True)
         exp_vals = np.exp(shifted)
         return exp_vals / np.sum(exp_vals, axis=-1, keepdims=True)
-
-    @staticmethod
-    def _get_model_path() -> Path:
-        MODEL_NAME = "chess_piece_classifier.onnx"
-
-        model_path = user_cache_path("chessvision", ensure_exists=True) / MODEL_NAME
-
-        if model_path.exists():
-            return model_path
-
-        url = f"https://huggingface.co/harshitpawar64/chessvision/resolve/main/{MODEL_NAME}"
-
-        temp_path = model_path.with_suffix(".tmp")
-
-        try:
-            urllib.request.urlretrieve(url, temp_path)
-            temp_path.replace(model_path)
-        except urllib.error.URLError as e:
-            temp_path.unlink(missing_ok=True)
-            raise RuntimeError(f"Failed to download model from {url}: {e}") from e
-
-        return model_path
