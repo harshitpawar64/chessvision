@@ -42,3 +42,7 @@ jobs:
       - name: Type check
         if: always()
         run: ty check src/chessvision
+
+      - name: Run tests
+        if: always()
+        run: pytest tests/
