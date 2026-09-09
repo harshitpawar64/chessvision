@@ -1,6 +1,8 @@
 # chessvision ♟️
 
 [![CI](https://github.com/harshitpawar64/chessvision/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/harshitpawar64/chessvision/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/github/harshitpawar64/chessvision/graph/badge.svg)](https://codecov.io/github/harshitpawar64/chessvision)
+[![Hugging Face](https://img.shields.io/badge/Hugging_Face-model-35c555.svg?logo=huggingface&labelColor=31373c)](https://huggingface.co/harshitpawar64/chessvision)
 [![python](https://img.shields.io/badge/Python-3.12_|_3.13_|_3.14-35c555.svg?logo=python&labelColor=31373c&logoColor=skyblue)](https://www.python.org/)
 
 [![uv](https://img.shields.io/badge/uv-black.svg?logo=uv)](https://docs.astral.sh/uv/)
