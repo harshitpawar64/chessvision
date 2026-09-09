@@ -29,7 +29,9 @@ classifiers = [
     "Topic :: Games/Entertainment :: Board Games",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Scientific/Engineering :: Image Recognition",
+    "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Utilities",
+    "Typing :: Typed",
 ]
 
 [project.urls]
