@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.5.0](https://github.com/harshitpawar64/chessvision/compare/v0.4.0...v0.5.0) (2026-09-09)
+
+
+### Features
+
+* **board:** add is_valid property to BoardPrediction ([fdfc466](https://github.com/harshitpawar64/chessvision/commit/fdfc4666d973293c9bec6da54d254a23a0814339))
+* **classifier:** support custom model path and cache directory ([cfca7e8](https://github.com/harshitpawar64/chessvision/commit/cfca7e8d4b040f2336702f36dd106da71fb7945a))
+* **cli:** warn if illegal chess position is detected ([c83dc46](https://github.com/harshitpawar64/chessvision/commit/c83dc4628b2ba1da94d227b7321cc63c7895e20f))
+* **detector:** add 8x8 chessboard verification and adaptive thresholding ([eb924f5](https://github.com/harshitpawar64/chessvision/commit/eb924f58ebe1bce7ec1f491a50c1f6492d7282b6))
+
+
+### Documentation
+
+* **readme:** add codecov and hugging face badges ([81b7e52](https://github.com/harshitpawar64/chessvision/commit/81b7e522459513f59dcfb8e3421cd5b84c11551a))
+* **readme:** add pytest badge ([240836d](https://github.com/harshitpawar64/chessvision/commit/240836de50949d03e4c4e435a335cf43b6ca2c75))
+
 ## [0.4.0](https://github.com/harshitpawar64/chessvision/compare/v0.3.0...v0.4.0) (2026-09-05)
 
 
