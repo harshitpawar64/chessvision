@@ -1,3 +1,4 @@
+import chess
 import numpy as np
 from PIL import Image
 
@@ -13,6 +14,7 @@ def test_board_prediction_valid() -> None:
         orientation=Orientation.WHITE,
     )
     assert prediction.is_valid is True
+    assert isinstance(prediction.board, chess.Board)
 
 
 def test_board_prediction_illegal() -> None:

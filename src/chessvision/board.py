@@ -18,9 +18,13 @@ class BoardPrediction:
     orientation: Orientation
 
     @property
+    def board(self) -> chess.Board:
+        return chess.Board(self.fen)
+
+    @property
     def is_valid(self) -> bool:
         try:
-            return chess.Board(self.fen).is_valid()
+            return self.board.is_valid()
         except ValueError:
             return False
 
