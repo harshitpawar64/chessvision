@@ -15,6 +15,7 @@ def test_board_prediction_valid() -> None:
     )
     assert prediction.is_valid is True
     assert isinstance(prediction.board, chess.Board)
+    assert prediction.validation_errors == []
 
 
 def test_board_prediction_illegal() -> None:
@@ -25,6 +26,11 @@ def test_board_prediction_illegal() -> None:
         orientation=Orientation.WHITE,
     )
     assert prediction.is_valid is False
+    assert prediction.validation_errors == [
+        "Board is empty",
+        "Missing white king",
+        "Missing black king",
+    ]
 
 
 def test_board_prediction_invalid() -> None:
@@ -35,6 +41,7 @@ def test_board_prediction_invalid() -> None:
         orientation=Orientation.WHITE,
     )
     assert prediction.is_valid is False
+    assert prediction.validation_errors == ["Invalid FEN syntax"]
 
 
 def test_board_prediction_url() -> None:

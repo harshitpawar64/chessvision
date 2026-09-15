@@ -4,10 +4,31 @@ from pathlib import Path
 
 import chess
 import numpy as np
+from chess import Status
 from PIL import Image
 
 from chessvision.classifier import PieceClassifier, SquarePrediction
 from chessvision.constants import PIECES, Castling, Orientation, Turn
+
+STATUS_ERROR_MESSAGES = {
+    Status.EMPTY: "Board is empty",
+    Status.NO_WHITE_KING: "Missing white king",
+    Status.NO_BLACK_KING: "Missing black king",
+    Status.TOO_MANY_KINGS: "Too many kings",
+    Status.TOO_MANY_WHITE_PAWNS: "Too many white pawns",
+    Status.TOO_MANY_BLACK_PAWNS: "Too many black pawns",
+    Status.PAWNS_ON_BACKRANK: "Pawns on back rank",
+    Status.TOO_MANY_WHITE_PIECES: "Too many white pieces",
+    Status.TOO_MANY_BLACK_PIECES: "Too many black pieces",
+    Status.BAD_CASTLING_RIGHTS: "Bad castling rights",
+    Status.INVALID_EP_SQUARE: "Invalid en passant square",
+    Status.OPPOSITE_CHECK: "Side not to move is in check",
+    Status.RACE_CHECK: "Race check",
+    Status.RACE_OVER: "Race over",
+    Status.RACE_MATERIAL: "Race material",
+    Status.TOO_MANY_CHECKERS: "Too many checkers",
+    Status.IMPOSSIBLE_CHECK: "Impossible check",
+}
 
 
 @dataclass(frozen=True, slots=True)
@@ -23,10 +44,19 @@ class BoardPrediction:
 
     @property
     def is_valid(self) -> bool:
+        return not self.validation_errors
+
+    @property
+    def validation_errors(self) -> list[str]:
         try:
-            return self.board.is_valid()
+            status = self.board.status()
         except ValueError:
-            return False
+            return ["Invalid FEN syntax"]
+
+        if status is Status.VALID:
+            return []
+
+        return [msg for flag, msg in STATUS_ERROR_MESSAGES.items() if status & flag]
 
     @property
     def render_board(self) -> str:
