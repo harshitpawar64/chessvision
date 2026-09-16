@@ -18,7 +18,7 @@ def test_version(runner: CliRunner) -> None:
 def test_square(runner: CliRunner) -> None:
     result = runner.invoke(app, ["square", "assets/square.png"])
     assert result.exit_code == 0
-    assert "bN" in result.stdout
+    assert "Black Knight" in result.stdout
 
 
 def test_board(runner: CliRunner) -> None:
@@ -112,8 +112,8 @@ def test_board_multiple_boards(
 
     result = runner.invoke(app, ["board", "assets/chessboard.png"])
     assert result.exit_code == 0
-    assert "--- Board #1 ---" in result.stdout
-    assert "--- Board #2 ---" in result.stdout
+    assert "Board #1" in result.stdout
+    assert "Board #2" in result.stdout
 
 
 def test_board_open_in_browser(

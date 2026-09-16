@@ -33,7 +33,7 @@ def square(
     classifier = PieceClassifier()
     prediction = classifier.predict_square(image)
 
-    print(f"{prediction.label} [{prediction.confidence:.2%}]")
+    print(f"{prediction.name} [{prediction.confidence:.2%}]")
 
 
 @app.command()
@@ -76,7 +76,7 @@ def board(
     invalid_boards = {}
     for i, board_img in enumerate(boards, 1):
         if len(boards) > 1:
-            print(f"--- Board #{i} ---")
+            typer.secho(f"Board #{i}".center(21), bold=True)
 
         prediction = predictor.predict(
             board_img, orientation=orientation, active_color=turn, castling=castling
