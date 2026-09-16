@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.6.0](https://github.com/harshitpawar64/chessvision/compare/v0.5.0...v0.6.0) (2026-09-16)
+
+
+### Features
+
+* **board:** add board property to BoardPrediction ([6be97f4](https://github.com/harshitpawar64/chessvision/commit/6be97f4c554d44b781c5690572d5edb38d7359bb))
+* **board:** add box borders and column alignment to render_board ([6b77b05](https://github.com/harshitpawar64/chessvision/commit/6b77b05d5ba7493c7a603045b22c0cb281ea9266))
+* **board:** add validation_errors property to BoardPrediction ([7074d6e](https://github.com/harshitpawar64/chessvision/commit/7074d6ec1e3ecbbe6cee4f3fa4dfaa740b911af4))
+* **classifier:** add name property to SquarePrediction ([f331d5a](https://github.com/harshitpawar64/chessvision/commit/f331d5a8af07553f25bbe19a295b976f15542605))
+* **cli:** report validation errors at the end of board prediction ([a911986](https://github.com/harshitpawar64/chessvision/commit/a911986e2170065afa891208087b48943d900333))
+* **cli:** use piece name in square command and center multi-board header ([6da2fd3](https://github.com/harshitpawar64/chessvision/commit/6da2fd3ec4b34e39d82513c78b7ae188ed5ad949))
+* **constants:** add PIECE_NAMES mapping for human-readable labels ([3550e05](https://github.com/harshitpawar64/chessvision/commit/3550e05014eb8404a7d2affe2da9b25aa2705e0b))
+* **detector:** fallback to full image when no contour candidates found ([83cdad7](https://github.com/harshitpawar64/chessvision/commit/83cdad7c951bb4e48e37809f6037bbb8a95208af))
+
+
+### Documentation
+
+* **readme:** update API usage examples ([e3b00d7](https://github.com/harshitpawar64/chessvision/commit/e3b00d725549d2af0b037ad876086258ee5a5b4c))
+
 ## [0.5.0](https://github.com/harshitpawar64/chessvision/compare/v0.4.0...v0.5.0) (2026-09-09)
 
 
