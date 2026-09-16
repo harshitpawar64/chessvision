@@ -72,7 +72,13 @@ prediction = predictor.predict(
 print(prediction.render_board)
 print(f"FEN: {prediction.fen}")
 print(f"Confidence: {prediction.confidence:.2%}")
+print(f"Valid: {prediction.is_valid}")
+if not prediction.is_valid:
+    print(f"Errors: {prediction.validation_errors}")
 print(f"URL: {prediction.url}")
+
+# Access the chess.Board object directly
+board = prediction.board
 
 # 2. Multi-Board Detection
 detector = BoardDetector()
@@ -85,12 +91,12 @@ for board in boards:
 # 3. Single Square Classification
 classifier = PieceClassifier()
 square_prediction = classifier.predict_square("square.png")
-print(f"{square_prediction.label} [{square_prediction.confidence:.2%}]")
+print(f"{square_prediction.name} [{square_prediction.confidence:.2%}]")
 
 # 4. Batch Squares Classification
 batch_predictions = classifier.predict_squares(["e4.png", "e5.png"])
 for prediction in batch_predictions:
-    print(f"{prediction.label} [{prediction.confidence:.2%}]")
+    print(f"{prediction.name} [{prediction.confidence:.2%}]")
 ```
 
 ---
