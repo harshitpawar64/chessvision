@@ -9,13 +9,17 @@ import onnxruntime as ort
 from PIL import Image
 from platformdirs import user_cache_path
 
-from chessvision.constants import PIECE_CLASSES
+from chessvision.constants import PIECE_CLASSES, PIECE_NAMES
 
 
 @dataclass(frozen=True, slots=True)
 class SquarePrediction:
     label: str
     confidence: float
+
+    @property
+    def name(self) -> str:
+        return PIECE_NAMES[self.label]
 
 
 class PieceClassifier:
