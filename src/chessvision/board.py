@@ -60,9 +60,8 @@ class BoardPrediction:
 
     @property
     def render_board(self) -> str:
-        lines = []
-
-        header = "  " + " ".join(self.orientation.files)
+        border = f"  +{'-' * 17}+"
+        lines = [border]
 
         for rank in self.orientation.ranks:
             row_symbols = [
@@ -70,9 +69,10 @@ class BoardPrediction:
                 for file in self.orientation.files
             ]
 
-            lines.append(f"{rank} " + " ".join(row_symbols))
+            lines.append(f"{rank} | " + " ".join(row_symbols) + " |")
 
-        lines.append(header)
+        lines.append(border)
+        lines.append("    " + " ".join(self.orientation.files))
         return "\n".join(lines)
 
     @property
