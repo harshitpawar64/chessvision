@@ -16,6 +16,22 @@ PIECES = {
     "bK": "k",
 }
 
+PIECE_NAMES = {
+    "empty": "Empty",
+    "wP": "White Pawn",
+    "wN": "White Knight",
+    "wB": "White Bishop",
+    "wR": "White Rook",
+    "wQ": "White Queen",
+    "wK": "White King",
+    "bP": "Black Pawn",
+    "bN": "Black Knight",
+    "bB": "Black Bishop",
+    "bR": "Black Rook",
+    "bQ": "Black Queen",
+    "bK": "Black King",
+}
+
 PIECE_CLASSES = tuple(PIECES)
 
 CLASS_TO_INDEX = {cls_name: index for index, cls_name in enumerate(PIECES)}
