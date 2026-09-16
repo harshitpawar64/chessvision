@@ -39,7 +39,14 @@ def test_board_illegal_warning(
     runner: CliRunner, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     mock_prediction = MagicMock(
-        fen="8/8/8/8/8/8/8/8 w - - 0 1", confidence=0.5, is_valid=False
+        fen="8/8/8/8/8/8/8/8 w - - 0 1",
+        confidence=0.5,
+        is_valid=False,
+        validation_errors=[
+            "Missing white king",
+            "Missing black king",
+            "Board is empty",
+        ],
     )
     monkeypatch.setattr(
         "chessvision.cli.BoardPredictor.predict",
@@ -48,7 +55,51 @@ def test_board_illegal_warning(
 
     result = runner.invoke(app, ["board", "assets/chessboard.png"])
     assert result.exit_code == 0
-    assert "Illegal position detected." in result.stderr
+    assert (
+        "Illegal position detected: Missing white king, Missing black king, Board is empty."
+        in result.stderr
+    )
+
+
+def test_board_multiple_boards_illegal(
+    runner: CliRunner, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    mock_prediction_valid = MagicMock(
+        fen="8/8/8/8/8/8/8/8 w - - 0 1", confidence=0.9, is_valid=True
+    )
+    mock_prediction_invalid = MagicMock(
+        fen="8/8/8/8/8/8/8/8 w - - 0 1",
+        confidence=0.5,
+        is_valid=False,
+        validation_errors=["Board is empty"],
+    )
+    monkeypatch.setattr(
+        "chessvision.cli.BoardDetector.detect",
+        lambda *args, **kwargs: ["assets/chessboard.png", "assets/chessboard.png"],
+    )
+    monkeypatch.setattr(
+        "chessvision.cli.BoardPredictor.predict",
+        MagicMock(side_effect=[mock_prediction_valid, mock_prediction_invalid]),
+    )
+
+    result = runner.invoke(app, ["board", "assets/chessboard.png"])
+    assert result.exit_code == 0
+    assert "Illegal position detected:" in result.stderr
+    assert "- Board #2: Board is empty" in result.stderr
+
+
+def test_report_illegal_positions_max_display(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    from chessvision.cli import _report_illegal_positions
+
+    errors = {i: ["Invalid position"] for i in range(1, 15)}
+    _report_illegal_positions(errors, total_boards=len(errors))
+    captured = capsys.readouterr()
+    assert "Illegal positions detected:" in captured.err
+    assert "- Board #10: Invalid position" in captured.err
+    assert "- Board #11:" not in captured.err
+    assert "... and 4 more." in captured.err
 
 
 def test_board_multiple_boards(
