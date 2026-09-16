@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 from PIL import Image
 
 from chessvision.detector import BoardDetector
@@ -26,3 +27,9 @@ def test_detect_numpy() -> None:
 
 def test_detect_no_board() -> None:
     assert detector.detect("assets/square.png") == []
+
+
+def test_detect_crop_fallback(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr("cv2.findContours", lambda *args, **kwargs: ([], None))
+    boards = detector.detect("assets/chessboard.png")
+    assert len(boards) == 1

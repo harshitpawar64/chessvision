@@ -49,10 +49,17 @@ class BoardDetector:
                 ):
                     candidates.append((x, y, x + w, y + h))
 
-        # Sort into reading order (top-to-bottom, left-to-right)
-        candidates.sort(key=lambda box: (box[1] // ((box[3] - box[1]) // 2), box[0]))
+        if candidates:
+            # Sort into reading order (top-to-bottom, left-to-right)
+            candidates.sort(
+                key=lambda box: (box[1] // ((box[3] - box[1]) // 2), box[0])
+            )
+            return [img.crop(bbox) for bbox in candidates]
 
-        return [img.crop(bbox) for bbox in candidates]
+        if 0.95 <= width / height <= 1.05 and self._is_8x8_board(gray):
+            return [img]
+
+        return []
 
     @staticmethod
     def _is_8x8_board(crop: np.ndarray) -> bool:
