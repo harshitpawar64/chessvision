@@ -36,7 +36,7 @@ def square(
 
 
 def castling_callback(value: str) -> str:
-    if value == "-":
+    if value in ("auto", "-"):
         return value
 
     if (
@@ -46,7 +46,7 @@ def castling_callback(value: str) -> str:
     ):
         return "".join(char for char in "KQkq" if char in chars)
 
-    raise typer.BadParameter("Expected '-', or combination of K, Q, k, q.")
+    raise typer.BadParameter("Expected 'auto', '-', or combination of K, Q, k, q.")
 
 
 @app.command()
@@ -75,7 +75,7 @@ def board(
             callback=castling_callback,
             help="Castling availability.",
         ),
-    ] = "-",
+    ] = "auto",
     open_in_browser: Annotated[
         bool, typer.Option("--open", help="Open position in Lichess editor.")
     ] = False,

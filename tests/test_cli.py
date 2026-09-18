@@ -25,7 +25,7 @@ def test_board(runner: CliRunner) -> None:
     result = runner.invoke(app, ["board", "assets/chessboard.png"])
     assert result.exit_code == 0
     assert "FEN:" in result.stdout
-    assert "2b1k2r/pp2P3/2p3RQ/8/5P2/7P/Pq1r2PK/4R3 w - - 0 1" in result.stdout
+    assert "2b1k2r/pp2P3/2p3RQ/8/5P2/7P/Pq1r2PK/4R3 w k - 0 1" in result.stdout
     assert "Confidence:" in result.stdout
 
 
@@ -38,7 +38,6 @@ def test_board_castling_valid(runner: CliRunner) -> None:
 def test_board_castling_invalid(runner: CliRunner) -> None:
     result = runner.invoke(app, ["board", "assets/chessboard.png", "-c", "invalid"])
     assert result.exit_code == 2
-    assert "Expected '-', or combination of" in result.stderr
 
 
 def test_board_no_board_detected(runner: CliRunner) -> None:

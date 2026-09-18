@@ -108,22 +108,23 @@ for prediction in batch_predictions:
 |-----------------|:---------:|:-----------:|-----------------------------------------------------------------------|
 | `--orientation` |    `-o`   |   `white`   | Board perspective (`white` or `black`).                               |
 | `--turn`        |    `-t`   |   `white`   | Side to move (`white` or `black`).                                    |
-| `--castling`    |    `-c`   |     `-`     | Castling availability (see [castling options](#castling-options)).    |
+| `--castling`    |    `-c`   |   `auto`    | Castling availability (see [castling options](#castling-options)).    |
 | `--open`        |           |   `False`   | Open position directly in Lichess editor.                             |
 
 #### Castling Options
 
 | **Value** | **Description**                              |
 |:---------:|----------------------------------------------|
+|   `auto`  | Automatically infer castling (default)       |
 |    `-`    | No castling for both sides (default)         |
 |  `[KQkq]` | Specific castling rights (e.g. KQkq, KQ, Qk) |
 
 ```bash
-# Specify board perspective (white or black orientation)
+# Specify board perspective (white or black)
 chessvision board chessboard.png --orientation black
 chessvision board chessboard.png -o black
 
-# Specify castling availability
+# Specify castling availability explicitly
 chessvision board chessboard.png --castling KQkq
 chessvision board chessboard.png -c KQ
 
