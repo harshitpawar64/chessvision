@@ -41,15 +41,22 @@ _FILES = ("a", "b", "c", "d", "e", "f", "g", "h")
 
 
 class Orientation(StrEnum):
+    AUTO = auto()
     WHITE = auto()
     BLACK = auto()
 
     @property
     def ranks(self) -> tuple[str, ...]:
+        if self is Orientation.AUTO:
+            raise ValueError("Orientation.AUTO does not have defined ranks.")
+
         return _RANKS[::-1] if self is Orientation.WHITE else _RANKS
 
     @property
     def files(self) -> tuple[str, ...]:
+        if self is Orientation.AUTO:
+            raise ValueError("Orientation.AUTO does not have defined files.")
+
         return _FILES if self is Orientation.WHITE else _FILES[::-1]
 
     @property

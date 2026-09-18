@@ -1,3 +1,5 @@
+import pytest
+
 from chessvision.constants import Orientation, Turn
 
 
@@ -19,6 +21,23 @@ def test_orientation_black() -> None:
     assert len(coords) == 64
     assert coords[0] == "h1"
     assert coords[-1] == "a8"
+
+
+def test_orientation_auto() -> None:
+    with pytest.raises(
+        ValueError, match="Orientation.AUTO does not have defined ranks."
+    ):
+        _ = Orientation.AUTO.ranks
+
+    with pytest.raises(
+        ValueError, match="Orientation.AUTO does not have defined files."
+    ):
+        _ = Orientation.AUTO.files
+
+    with pytest.raises(
+        ValueError, match="Orientation.AUTO does not have defined ranks."
+    ):
+        _ = Orientation.AUTO.grid_coordinates
 
 
 def test_turn_symbol() -> None:
