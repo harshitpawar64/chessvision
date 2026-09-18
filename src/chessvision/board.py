@@ -88,7 +88,7 @@ class BoardPredictor:
     def predict(
         self,
         image: Image.Image | Path | str | np.ndarray,
-        orientation: Orientation = Orientation.WHITE,
+        orientation: Orientation = Orientation.AUTO,
         active_color: Turn = Turn.WHITE,
         castling: str = "auto",
     ) -> BoardPrediction:
@@ -96,6 +96,9 @@ class BoardPredictor:
         predictions = self.classifier.predict_squares(square_images)
 
         avg_confidence = np.mean([prediction.confidence for prediction in predictions])
+
+        if orientation is Orientation.AUTO:
+            orientation = self._infer_orientation(predictions)
 
         square_map = dict(zip(orientation.grid_coordinates, predictions))
 
@@ -132,6 +135,28 @@ class BoardPredictor:
         placement = re.sub(r"\.+", lambda m: str(len(m.group())), raw)
 
         return f"{placement} {active_color.symbol} {castling} {en_passant} {halfmove} {fullmove}"
+
+    @staticmethod
+    def _infer_orientation(predictions: list[SquarePrediction]) -> Orientation:
+        white_rows = [
+            i // 8
+            for i, prediction in enumerate(predictions)
+            if prediction.label.startswith("w")
+        ]
+        black_rows = [
+            i // 8
+            for i, prediction in enumerate(predictions)
+            if prediction.label.startswith("b")
+        ]
+
+        if not white_rows or not black_rows:
+            return Orientation.WHITE
+
+        return (
+            Orientation.WHITE
+            if np.mean(white_rows) > np.mean(black_rows)
+            else Orientation.BLACK
+        )
 
     @staticmethod
     def _infer_castling(square_map: dict[str, SquarePrediction]) -> str:

@@ -63,7 +63,7 @@ from chessvision import (
 predictor = BoardPredictor()
 prediction = predictor.predict(
     "chessboard.png",
-    orientation=Orientation.WHITE,
+    orientation=Orientation.AUTO,
     active_color=Turn.WHITE,
     castling="auto",
 )

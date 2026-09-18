@@ -4,7 +4,7 @@ import pytest
 from PIL import Image
 
 from chessvision.board import BoardPrediction, BoardPredictor, slice_board
-from chessvision.classifier import SquarePrediction
+from chessvision.classifier import PieceClassifier, SquarePrediction
 from chessvision.constants import Orientation
 
 
@@ -96,3 +96,41 @@ def test_board_predictor_auto_castling(
     }
     fen = BoardPredictor.fen(square_map)
     assert f" w {castling_rights} - 0 1" in fen
+
+
+def test_board_predictor_explicit_orientation() -> None:
+    predictor = BoardPredictor()
+    prediction = predictor.predict(
+        "assets/chessboard.png", orientation=Orientation.WHITE
+    )
+    assert prediction.orientation == Orientation.WHITE
+
+
+def test_board_predictor_auto_orientation_black(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    mock_predictions = [
+        SquarePrediction(label="empty", confidence=1.0) for _ in range(64)
+    ]
+    mock_predictions[0] = SquarePrediction(label="wK", confidence=1.0)
+    mock_predictions[63] = SquarePrediction(label="bK", confidence=1.0)
+    monkeypatch.setattr(
+        PieceClassifier, "predict_squares", lambda *args, **kwargs: mock_predictions
+    )
+    predictor = BoardPredictor()
+    prediction = predictor.predict("assets/chessboard.png")
+    assert prediction.orientation == Orientation.BLACK
+
+
+def test_board_predictor_auto_orientation_empty(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    mock_predictions = [
+        SquarePrediction(label="empty", confidence=1.0) for _ in range(64)
+    ]
+    monkeypatch.setattr(
+        PieceClassifier, "predict_squares", lambda *args, **kwargs: mock_predictions
+    )
+    predictor = BoardPredictor()
+    prediction = predictor.predict("assets/chessboard.png")
+    assert prediction.orientation == Orientation.WHITE
