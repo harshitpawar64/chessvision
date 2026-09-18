@@ -60,13 +60,13 @@ def test_board_prediction_url() -> None:
 
 
 def test_slice_board() -> None:
-    crops, _ = slice_board("assets/chessboard.png")
+    crops = slice_board("assets/chessboard.png")
     assert len(crops) == 64
 
 
 def test_slice_board_pil() -> None:
     img = Image.open("assets/chessboard.png")
-    crops, _ = slice_board(img)
+    crops = slice_board(img)
     assert len(crops) == 64
 
 
@@ -74,7 +74,7 @@ def test_slice_board_arr() -> None:
     img = Image.open("assets/chessboard.png")
     arr = np.array(img)
 
-    crops, _ = slice_board(arr)
+    crops = slice_board(arr)
     assert len(crops) == 64
 
 

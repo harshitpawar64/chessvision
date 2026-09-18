@@ -92,15 +92,12 @@ class BoardPredictor:
         active_color: Turn = Turn.WHITE,
         castling: str = "auto",
     ) -> BoardPrediction:
-        square_images, coordinates = slice_board(image, orientation=orientation)
+        square_images = slice_board(image)
         predictions = self.classifier.predict_squares(square_images)
 
         avg_confidence = np.mean([prediction.confidence for prediction in predictions])
 
-        square_map = {
-            coordinate: prediction
-            for coordinate, prediction in zip(coordinates, predictions)
-        }
+        square_map = dict(zip(orientation.grid_coordinates, predictions))
 
         fen = self.fen(
             square_map=square_map, active_color=active_color, castling=castling
@@ -155,10 +152,7 @@ class BoardPredictor:
         return castling_rights if castling_rights else "-"
 
 
-def slice_board(
-    image: Image.Image | Path | str | np.ndarray,
-    orientation: Orientation = Orientation.WHITE,
-) -> tuple[list[Image.Image], list[str]]:
+def slice_board(image: Image.Image | Path | str | np.ndarray) -> list[Image.Image]:
     if isinstance(image, (Path, str)):
         img = Image.open(image).convert("RGB")
     elif isinstance(image, np.ndarray):
@@ -179,4 +173,4 @@ def slice_board(
         for col in range(8)
     ]
 
-    return square_images, orientation.grid_coordinates
+    return square_images
