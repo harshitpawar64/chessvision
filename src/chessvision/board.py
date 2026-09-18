@@ -8,7 +8,7 @@ from chess import Status
 from PIL import Image
 
 from chessvision.classifier import PieceClassifier, SquarePrediction
-from chessvision.constants import PIECES, Castling, Orientation, Turn
+from chessvision.constants import PIECES, Orientation, Turn
 
 STATUS_ERROR_MESSAGES = {
     Status.EMPTY: "Board is empty",
@@ -90,7 +90,7 @@ class BoardPredictor:
         image: Image.Image | Path | str | np.ndarray,
         orientation: Orientation = Orientation.WHITE,
         active_color: Turn = Turn.WHITE,
-        castling: Castling = Castling.NONE,
+        castling: str = "-",
     ) -> BoardPrediction:
         square_images, coordinates = slice_board(image, orientation=orientation)
         predictions = self.classifier.predict_squares(square_images)
@@ -117,7 +117,7 @@ class BoardPredictor:
     def fen(
         square_map: dict[str, SquarePrediction],
         active_color: Turn = Turn.WHITE,
-        castling: Castling = Castling.NONE,
+        castling: str = "-",
         en_passant: str = "-",
         halfmove: int = 0,
         fullmove: int = 1,

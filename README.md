@@ -54,7 +54,6 @@ chessvision square square.png
 from chessvision import (
     BoardDetector,
     BoardPredictor,
-    Castling,
     Orientation,
     PieceClassifier,
     Turn,
@@ -66,7 +65,7 @@ prediction = predictor.predict(
     "chessboard.png",
     orientation=Orientation.WHITE,
     active_color=Turn.WHITE,
-    castling=Castling.ALL,
+    castling="KQkq",
 )
 
 print(prediction.render_board)
@@ -114,16 +113,10 @@ for prediction in batch_predictions:
 
 #### Castling Options
 
-| **Value** | **Description**                      |
-|:---------:|--------------------------------------|
-|    `-`    | No castling for both sides (default) |
-|   `KQkq`  | Both sides can castle both sides     |
-|    `KQ`   | White can castle both sides          |
-|    `kq`   | Black can castle both sides          |
-|    `K`    | White can castle kingside only       |
-|    `Q`    | White can castle queenside only      |
-|    `k`    | Black can castle kingside only       |
-|    `q`    | Black can castle queenside only      |
+| **Value** | **Description**                              |
+|:---------:|----------------------------------------------|
+|    `-`    | No castling for both sides (default)         |
+|  `[KQkq]` | Specific castling rights (e.g. KQkq, KQ, Qk) |
 
 ```bash
 # Specify board perspective (white or black orientation)

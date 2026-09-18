@@ -64,15 +64,3 @@ class Turn(StrEnum):
     @property
     def symbol(self) -> str:
         return "w" if self is Turn.WHITE else "b"
-
-
-class Castling(StrEnum):
-    WHITE = "KQ"
-    BLACK = "kq"
-    ALL = "KQkq"
-    NONE = "-"
-
-    WHITE_KINGSIDE = "K"
-    WHITE_QUEENSIDE = "Q"
-    BLACK_KINGSIDE = "k"
-    BLACK_QUEENSIDE = "q"

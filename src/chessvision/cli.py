@@ -6,7 +6,6 @@ import typer
 from chessvision import (
     BoardDetector,
     BoardPredictor,
-    Castling,
     Orientation,
     PieceClassifier,
     Turn,
@@ -36,6 +35,20 @@ def square(
     print(f"{prediction.name} [{prediction.confidence:.2%}]")
 
 
+def castling_callback(value: str) -> str:
+    if value == "-":
+        return value
+
+    if (
+        (chars := set(value))
+        and chars <= {"K", "Q", "k", "q"}
+        and len(chars) == len(value)
+    ):
+        return "".join(char for char in "KQkq" if char in chars)
+
+    raise typer.BadParameter("Expected '-', or combination of K, Q, k, q.")
+
+
 @app.command()
 def board(
     image: Annotated[
@@ -55,8 +68,14 @@ def board(
         Turn, typer.Option("--turn", "-t", help="Side to move.")
     ] = Turn.WHITE,
     castling: Annotated[
-        Castling, typer.Option("--castling", "-c", help="Castling availability.")
-    ] = Castling.NONE,
+        str,
+        typer.Option(
+            "--castling",
+            "-c",
+            callback=castling_callback,
+            help="Castling availability.",
+        ),
+    ] = "-",
     open_in_browser: Annotated[
         bool, typer.Option("--open", help="Open position in Lichess editor.")
     ] = False,
