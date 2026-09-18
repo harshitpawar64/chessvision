@@ -104,25 +104,25 @@ for prediction in batch_predictions:
 
 ### `chessvision board`
 
-| **Flag**        | **Short** | **Default** | **Description**                                                       |
-|-----------------|:---------:|:-----------:|-----------------------------------------------------------------------|
-| `--orientation` |    `-o`   |   `white`   | Board perspective (`white` or `black`).                               |
-| `--turn`        |    `-t`   |   `white`   | Side to move (`white` or `black`).                                    |
-| `--castling`    |    `-c`   |   `auto`    | Castling availability (see [castling options](#castling-options)).    |
-| `--open`        |           |   `False`   | Open position directly in Lichess editor.                             |
+| **Flag**        | **Short** | **Default** | **Description**                                                    |
+|-----------------|:---------:|:-----------:|--------------------------------------------------------------------|
+| `--orientation` |    `-o`   |    `auto`   | Board perspective (`auto`, `white`, or `black`).                   |
+| `--turn`        |    `-t`   |   `white`   | Side to move (`white` or `black`).                                 |
+| `--castling`    |    `-c`   |    `auto`   | Castling availability (see [castling options](#castling-options)). |
+| `--open`        |           |   `False`   | Open position directly in Lichess editor.                          |
 
 #### Castling Options
 
 | **Value** | **Description**                              |
 |:---------:|----------------------------------------------|
 |   `auto`  | Automatically infer castling (default)       |
-|    `-`    | No castling for both sides (default)         |
+|    `-`    | No castling for both sides                   |
 |  `[KQkq]` | Specific castling rights (e.g. KQkq, KQ, Qk) |
 
 ```bash
-# Specify board perspective (white or black)
+# Specify board perspective (auto, white, or black)
 chessvision board chessboard.png --orientation black
-chessvision board chessboard.png -o black
+chessvision board chessboard.png -o white
 
 # Specify castling availability explicitly
 chessvision board chessboard.png --castling KQkq

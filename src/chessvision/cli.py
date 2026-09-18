@@ -63,7 +63,7 @@ def board(
     ],
     orientation: Annotated[
         Orientation, typer.Option("--orientation", "-o", help="Board perspective.")
-    ] = Orientation.WHITE,
+    ] = Orientation.AUTO,
     turn: Annotated[
         Turn, typer.Option("--turn", "-t", help="Side to move.")
     ] = Turn.WHITE,
