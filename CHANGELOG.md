@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.7.0](https://github.com/harshitpawar64/chessvision/compare/v0.6.0...v0.7.0) (2026-09-18)
+
+
+### Features
+
+* **board:** infer castling rights automatically from piece positions ([66ecab0](https://github.com/harshitpawar64/chessvision/commit/66ecab0203a1b7fbdce9fab095c3a4d20fa4224e))
+* **board:** infer orientation automatically from piece positions ([e37f57e](https://github.com/harshitpawar64/chessvision/commit/e37f57e3d8c7f565a7f45e781f6bea42dd6e6f81))
+* **cli:** default castling option to auto ([fac4a52](https://github.com/harshitpawar64/chessvision/commit/fac4a52f24172f6386851570f1eee96b5ec9a40d))
+* **cli:** default orientation option to auto ([c47b123](https://github.com/harshitpawar64/chessvision/commit/c47b123bb3210051a1a1e5a149e884f66db6ff15))
+* **constants:** add AUTO to orientation enum with validation guards ([049ddec](https://github.com/harshitpawar64/chessvision/commit/049ddec95f5e1ba79fba8e0beff1b87066061cdf))
+
+
+### Bug Fixes
+
+* **classifier:** disable appauthor to prevent duplicate directories on Windows ([aca82bf](https://github.com/harshitpawar64/chessvision/commit/aca82bf0a23782ee8b506082ee9f42791172119f))
+
+
+### Refactor
+
+* **board:** decouple orientation from slice_board ([f4a7aa5](https://github.com/harshitpawar64/chessvision/commit/f4a7aa59b56cb0c784b4839c398e5142fb3d440d))
+* replace Castling enum with string representation and CLI validation ([e247880](https://github.com/harshitpawar64/chessvision/commit/e247880ab552c2c99df236707c0e301e8a658ac8))
+
 ## [0.6.0](https://github.com/harshitpawar64/chessvision/compare/v0.5.0...v0.6.0) (2026-09-16)
 
 
