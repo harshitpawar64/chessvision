@@ -73,7 +73,7 @@ class PieceClassifier:
         model_path = (
             Path(cache_dir)
             if cache_dir
-            else user_cache_path("chessvision", ensure_exists=True)
+            else user_cache_path("chessvision", appauthor=False, ensure_exists=True)
         ) / MODEL_NAME
 
         if model_path.exists():
