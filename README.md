@@ -65,7 +65,7 @@ prediction = predictor.predict(
     "chessboard.png",
     orientation=Orientation.WHITE,
     active_color=Turn.WHITE,
-    castling="KQkq",
+    castling="auto",
 )
 
 print(prediction.render_board)

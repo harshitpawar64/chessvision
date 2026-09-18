@@ -1,8 +1,10 @@
 import chess
 import numpy as np
+import pytest
 from PIL import Image
 
-from chessvision.board import BoardPrediction, slice_board
+from chessvision.board import BoardPrediction, BoardPredictor, slice_board
+from chessvision.classifier import SquarePrediction
 from chessvision.constants import Orientation
 
 
@@ -74,3 +76,23 @@ def test_slice_board_arr() -> None:
 
     crops, _ = slice_board(arr)
     assert len(crops) == 64
+
+
+@pytest.mark.parametrize(
+    ("squares", "castling_rights"),
+    [
+        ({"e1": "wK", "h1": "wR", "a1": "wR"}, "KQ"),
+        ({"e8": "bK", "h8": "bR"}, "k"),
+        ({"e8": "bK", "a8": "bR"}, "q"),
+        ({"e1": "wK"}, "-"),
+    ],
+)
+def test_board_predictor_auto_castling(
+    squares: dict[str, str], castling_rights: str
+) -> None:
+    square_map = {
+        coord: SquarePrediction(label=squares.get(coord, "empty"), confidence=1.0)
+        for coord in Orientation.WHITE.grid_coordinates
+    }
+    fen = BoardPredictor.fen(square_map)
+    assert f" w {castling_rights} - 0 1" in fen

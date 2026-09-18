@@ -90,7 +90,7 @@ class BoardPredictor:
         image: Image.Image | Path | str | np.ndarray,
         orientation: Orientation = Orientation.WHITE,
         active_color: Turn = Turn.WHITE,
-        castling: str = "-",
+        castling: str = "auto",
     ) -> BoardPrediction:
         square_images, coordinates = slice_board(image, orientation=orientation)
         predictions = self.classifier.predict_squares(square_images)
@@ -117,11 +117,13 @@ class BoardPredictor:
     def fen(
         square_map: dict[str, SquarePrediction],
         active_color: Turn = Turn.WHITE,
-        castling: str = "-",
+        castling: str = "auto",
         en_passant: str = "-",
         halfmove: int = 0,
         fullmove: int = 1,
     ) -> str:
+        if castling == "auto":
+            castling = BoardPredictor._infer_castling(square_map)
 
         raw = "/".join(
             "".join(
@@ -133,6 +135,24 @@ class BoardPredictor:
         placement = re.sub(r"\.+", lambda m: str(len(m.group())), raw)
 
         return f"{placement} {active_color.symbol} {castling} {en_passant} {halfmove} {fullmove}"
+
+    @staticmethod
+    def _infer_castling(square_map: dict[str, SquarePrediction]) -> str:
+        castling_rights = ""
+
+        if square_map["e1"].label == "wK":
+            if square_map["h1"].label == "wR":
+                castling_rights += "K"
+            if square_map["a1"].label == "wR":
+                castling_rights += "Q"
+
+        if square_map["e8"].label == "bK":
+            if square_map["h8"].label == "bR":
+                castling_rights += "k"
+            if square_map["a8"].label == "bR":
+                castling_rights += "q"
+
+        return castling_rights if castling_rights else "-"
 
 
 def slice_board(
