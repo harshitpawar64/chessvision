@@ -66,7 +66,7 @@ def board(
     ] = Orientation.AUTO,
     turn: Annotated[
         Turn, typer.Option("--turn", "-t", help="Side to move.")
-    ] = Turn.WHITE,
+    ] = Turn.AUTO,
     castling: Annotated[
         str,
         typer.Option(
