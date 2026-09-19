@@ -1,13 +1,13 @@
 import pytest
 
-from chessvision.cli.utils import report_illegal_positions
+from chessvision.cli.utils import report_validation_errors
 
 
-def test_report_illegal_positions_max_display(
+def test_report_validation_errors_max_display(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    errors = {i: ["Invalid position"] for i in range(1, 15)}
-    report_illegal_positions(errors, total_boards=len(errors))
+    errors = {f"Board #{i}": ["Invalid position"] for i in range(1, 15)}
+    report_validation_errors(errors, total_boards=len(errors))
     captured = capsys.readouterr()
 
     assert "Illegal positions detected:" in captured.err

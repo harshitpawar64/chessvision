@@ -4,7 +4,7 @@ from typing import Annotated
 import typer
 
 from chessvision import BoardDetector, BoardPredictor, Orientation, Turn
-from chessvision.cli.utils import report_illegal_positions
+from chessvision.cli.utils import report_validation_errors
 
 
 def castling_callback(value: str) -> str:
@@ -75,7 +75,7 @@ def board(
         print(f"Confidence: {prediction.confidence:.2%}")
 
         if not prediction.is_valid:
-            invalid_boards[i] = prediction.validation_errors
+            invalid_boards[f"Board #{i}"] = prediction.validation_errors
 
         if len(boards) > 1 and i < len(boards):
             print()
@@ -83,4 +83,4 @@ def board(
         if open_in_browser:
             typer.launch(prediction.url)
 
-    report_illegal_positions(invalid_boards, total_boards=len(boards))
+    report_validation_errors(invalid_boards, total_boards=len(boards))

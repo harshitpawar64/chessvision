@@ -1,7 +1,7 @@
 import typer
 
 
-def report_illegal_positions(errors: dict[int, list[str]], total_boards: int) -> None:
+def report_validation_errors(errors: dict[str, list[str]], total_boards: int) -> None:
     if not errors:
         return
 
@@ -22,9 +22,9 @@ def report_illegal_positions(errors: dict[int, list[str]], total_boards: int) ->
         fg=typer.colors.YELLOW,
         err=True,
     )
-    for board_num, validation_errors in list(errors.items())[:max_display]:
+    for label, validation_errors in list(errors.items())[:max_display]:
         typer.secho(
-            f"  - Board #{board_num}: {', '.join(validation_errors)}",
+            f"  - {label}: {', '.join(validation_errors)}",
             fg=typer.colors.YELLOW,
             err=True,
         )
