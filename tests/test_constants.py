@@ -41,5 +41,8 @@ def test_orientation_auto() -> None:
 
 
 def test_turn_symbol() -> None:
+    with pytest.raises(ValueError, match="Turn.AUTO does not have a defined symbol."):
+        _ = Turn.AUTO.symbol
+
     assert Turn.WHITE.symbol == "w"
     assert Turn.BLACK.symbol == "b"

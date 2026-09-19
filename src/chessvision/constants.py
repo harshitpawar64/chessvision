@@ -65,9 +65,13 @@ class Orientation(StrEnum):
 
 
 class Turn(StrEnum):
+    AUTO = auto()
     WHITE = auto()
     BLACK = auto()
 
     @property
     def symbol(self) -> str:
+        if self is Turn.AUTO:
+            raise ValueError("Turn.AUTO does not have a defined symbol.")
+
         return "w" if self is Turn.WHITE else "b"
