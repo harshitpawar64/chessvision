@@ -97,9 +97,7 @@ def board(
         if len(boards) > 1:
             typer.secho(f"Board #{i}".center(21), bold=True)
 
-        prediction = predictor.predict(
-            board_img, orientation=orientation, active_color=turn, castling=castling
-        )
+        prediction = predictor.predict(board_img, orientation, turn, castling)
 
         print(prediction.render_board + "\n")
         print(f"FEN: {prediction.fen}")

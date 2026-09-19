@@ -89,7 +89,7 @@ class BoardPredictor:
         self,
         image: Image.Image | Path | str | np.ndarray,
         orientation: Orientation = Orientation.AUTO,
-        active_color: Turn = Turn.WHITE,
+        turn: Turn = Turn.AUTO,
         castling: str = "auto",
     ) -> BoardPrediction:
         square_images = slice_board(image)
@@ -102,9 +102,7 @@ class BoardPredictor:
 
         square_map = dict(zip(orientation.grid_coordinates, predictions))
 
-        fen = self.fen(
-            square_map=square_map, active_color=active_color, castling=castling
-        )
+        fen = self.fen(square_map=square_map, active_color=turn, castling=castling)
 
         return BoardPrediction(
             fen=fen,
@@ -116,7 +114,7 @@ class BoardPredictor:
     @staticmethod
     def fen(
         square_map: dict[str, SquarePrediction],
-        active_color: Turn = Turn.WHITE,
+        active_color: Turn = Turn.AUTO,
         castling: str = "auto",
         en_passant: str = "-",
         halfmove: int = 0,
@@ -124,6 +122,9 @@ class BoardPredictor:
     ) -> str:
         if castling == "auto":
             castling = BoardPredictor._infer_castling(square_map)
+
+        if active_color is Turn.AUTO:
+            active_color = BoardPredictor._infer_turn(square_map)
 
         raw = "/".join(
             "".join(
@@ -175,6 +176,36 @@ class BoardPredictor:
                 castling_rights += "q"
 
         return castling_rights if castling_rights else "-"
+
+    @staticmethod
+    def _infer_turn(square_map: dict[str, SquarePrediction]) -> Turn:
+        board = chess.Board(None)
+        for square, prediction in square_map.items():
+            if prediction.label != "empty":
+                board.set_piece_at(
+                    chess.parse_square(square),
+                    chess.Piece.from_symbol(PIECES[prediction.label]),
+                )
+
+        white_king = board.king(chess.WHITE)
+        black_king = board.king(chess.BLACK)
+
+        white_in_check = white_king is not None and board.is_attacked_by(
+            chess.BLACK, white_king
+        )
+        black_in_check = black_king is not None and board.is_attacked_by(
+            chess.WHITE, black_king
+        )
+
+        if white_in_check and not black_in_check:
+            return Turn.WHITE
+
+        if black_in_check and not white_in_check:
+            return Turn.BLACK
+
+        top_left_square = next(iter(square_map), None)
+
+        return Turn.BLACK if top_left_square == "h1" else Turn.WHITE
 
 
 def slice_board(image: Image.Image | Path | str | np.ndarray) -> list[Image.Image]:

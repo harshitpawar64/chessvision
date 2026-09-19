@@ -62,10 +62,7 @@ from chessvision import (
 # 1. Full Board Recognition
 predictor = BoardPredictor()
 prediction = predictor.predict(
-    "chessboard.png",
-    orientation=Orientation.AUTO,
-    active_color=Turn.WHITE,
-    castling="auto",
+    "chessboard.png", orientation=Orientation.AUTO, turn=Turn.AUTO, castling="auto"
 )
 
 print(prediction.render_board)
@@ -107,7 +104,7 @@ for prediction in batch_predictions:
 | **Flag**        | **Short** | **Default** | **Description**                                                    |
 |-----------------|:---------:|:-----------:|--------------------------------------------------------------------|
 | `--orientation` |    `-o`   |    `auto`   | Board perspective (`auto`, `white`, or `black`).                   |
-| `--turn`        |    `-t`   |   `white`   | Side to move (`white` or `black`).                                 |
+| `--turn`        |    `-t`   |    `auto`   | Side to move (`auto`, `white` or `black`).                         |
 | `--castling`    |    `-c`   |    `auto`   | Castling availability (see [castling options](#castling-options)). |
 | `--open`        |           |   `False`   | Open position directly in Lichess editor.                          |
 
@@ -120,7 +117,7 @@ for prediction in batch_predictions:
 |  `[KQkq]` | Specific castling rights (e.g. KQkq, KQ, Qk) |
 
 ```bash
-# Specify board perspective (auto, white, or black)
+# Specify board perspective explicitly
 chessvision board chessboard.png --orientation black
 chessvision board chessboard.png -o white
 
@@ -128,9 +125,9 @@ chessvision board chessboard.png -o white
 chessvision board chessboard.png --castling KQkq
 chessvision board chessboard.png -c KQ
 
-# Specify side to move (white or black)
+# Specify side to move explicitly
 chessvision board chessboard.png --turn black
-chessvision board chessboard.png -t black
+chessvision board chessboard.png -t white
 
 # Open position directly in Lichess editor
 chessvision board chessboard.png --open
