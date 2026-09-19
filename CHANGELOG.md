@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.8.0](https://github.com/harshitpawar64/chessvision/compare/v0.7.0...v0.8.0) (2026-09-19)
+
+
+### Features
+
+* **board:** infer turn automatically from piece positions ([f05dfda](https://github.com/harshitpawar64/chessvision/commit/f05dfda0ab470a3a12034a57e6e38e2e9abfbcf1))
+* **cli:** default turn option to auto ([a6ae778](https://github.com/harshitpawar64/chessvision/commit/a6ae77836c82ffdcec305a4a25993754920e1592))
+* **constants:** add AUTO to Turn enum with validation guard ([0df6223](https://github.com/harshitpawar64/chessvision/commit/0df6223179d931028d41d1014d15aa3c34772eec))
+* **detector:** add hierarchical contour detection, otsu thresholding, and nms deduplication ([5993ab6](https://github.com/harshitpawar64/chessvision/commit/5993ab62f0ab28b5485f3bc4d69a111686478885))
+
+
+### Refactor
+
+* **cli:** modularize cli and test suite ([3d31040](https://github.com/harshitpawar64/chessvision/commit/3d31040bd1e74ff9bb030989dc009efc40f1a2e8))
+* **cli:** support string labels in validation error reporting ([8f290fe](https://github.com/harshitpawar64/chessvision/commit/8f290fec5ad271c920eb4af8966bc802f19b103d))
+
 ## [0.7.0](https://github.com/harshitpawar64/chessvision/compare/v0.6.0...v0.7.0) (2026-09-18)
 
 
