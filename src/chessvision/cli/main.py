@@ -4,12 +4,14 @@ import typer
 
 from chessvision import __version__
 from chessvision.cli.board import board
+from chessvision.cli.pdf import pdf
 from chessvision.cli.square import square
 
 app = typer.Typer()
 
 app.command()(square)
 app.command()(board)
+app.command()(pdf)
 
 
 def version_callback(value: bool) -> None:

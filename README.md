@@ -44,6 +44,9 @@ pip install chessvision
 # Predict chess positions from a board, screenshot, or book page
 chessvision board chessboard.png
 
+# Predict chess positions from a PDF document
+chessvision pdf document.pdf
+
 # Predict a single square image
 chessvision square square.png
 ```
@@ -131,6 +134,13 @@ chessvision board chessboard.png -t white
 
 # Open position directly in Lichess editor
 chessvision board chessboard.png --open
+```
+
+### `chessvision pdf`
+
+```bash
+# Predict chess positions from a PDF document
+chessvision pdf document.pdf
 ```
 
 ### `chessvision square`
