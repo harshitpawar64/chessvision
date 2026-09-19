@@ -29,11 +29,9 @@ class BoardDetector:
         threshold_mode = (
             cv2.THRESH_BINARY if gray.mean() < 128 else cv2.THRESH_BINARY_INV
         )
-        _, binary = cv2.threshold(gray, 160, 255, threshold_mode)
+        _, binary = cv2.threshold(gray, 0, 255, threshold_mode | cv2.THRESH_OTSU)
         binary = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8))
-        contours, _ = cv2.findContours(
-            binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
-        )
+        contours, _ = cv2.findContours(binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
         candidates = []
         for contour in contours:
@@ -47,14 +45,18 @@ class BoardDetector:
                     and 0.95 <= w / h <= 1.05
                     and self._is_8x8_board(gray[y : y + h, x : x + w])
                 ):
-                    candidates.append((x, y, x + w, y + h))
+                    candidates.append((x, y, w, h))
 
         if candidates:
-            # Sort into reading order (top-to-bottom, left-to-right)
-            candidates.sort(
-                key=lambda box: (box[1] // ((box[3] - box[1]) // 2), box[0])
+            scores = [w * h for _, _, w, h in candidates]
+            indices = cv2.dnn.NMSBoxes(
+                candidates, scores, score_threshold=0.0, nms_threshold=0.3
             )
-            return [img.crop(bbox) for bbox in candidates]
+            selected = [candidates[i] for i in indices]
+
+            # Sort into reading order (top-to-bottom, left-to-right)
+            selected.sort(key=lambda box: (box[1] // (box[3] // 2), box[0]))
+            return [img.crop((x, y, x + w, y + h)) for x, y, w, h in selected]
 
         if 0.95 <= width / height <= 1.05 and self._is_8x8_board(gray):
             return [img]
