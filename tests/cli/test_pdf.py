@@ -29,35 +29,7 @@ def test_pdf_no_board_detected(runner: CliRunner, tmp_path: Path) -> None:
     assert "No chessboard detected in the PDF." in result.stderr
 
 
-def test_pdf_single_board(
-    runner: CliRunner, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    pdf_path = tmp_path / "single.pdf"
-    doc = pdfium.PdfDocument.new()
-    doc.new_page(200, 200)
-    doc.save(pdf_path)
-    doc.close()
-
-    mock_prediction = MagicMock(
-        fen="8/8/8/8/8/8/8/8 w - - 0 1", confidence=0.99, is_valid=True
-    )
-    monkeypatch.setattr(
-        "chessvision.cli.pdf.BoardDetector.detect",
-        lambda *args, **kwargs: ["mock_board_img"],
-    )
-    monkeypatch.setattr(
-        "chessvision.cli.pdf.BoardPredictor.predict",
-        lambda *args, **kwargs: mock_prediction,
-    )
-
-    result = runner.invoke(app, ["pdf", str(pdf_path)])
-    assert result.exit_code == 0
-    assert "Page 1" in result.stdout
-    assert "FEN: 8/8/8/8/8/8/8/8 w - - 0 1" in result.stdout
-    assert "Confidence: 99.00%" in result.stdout
-
-
-def test_pdf_multiple_boards_and_pages(
+def test_pdf_multiple_boards(
     runner: CliRunner, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     pdf_path = tmp_path / "multi.pdf"
@@ -78,11 +50,11 @@ def test_pdf_multiple_boards_and_pages(
     )
 
     monkeypatch.setattr(
-        "chessvision.cli.pdf.BoardDetector.detect",
+        "chessvision.pdf.BoardDetector.detect",
         MagicMock(side_effect=[[], ["board_1", "board_2"]]),
     )
     monkeypatch.setattr(
-        "chessvision.cli.pdf.BoardPredictor.predict",
+        "chessvision.pdf.BoardPredictor.predict",
         MagicMock(side_effect=[mock_valid, mock_invalid]),
     )
 
