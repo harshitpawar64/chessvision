@@ -58,6 +58,7 @@ from chessvision import (
     BoardDetector,
     BoardPredictor,
     Orientation,
+    PDFPredictor,
     PieceClassifier,
     Turn,
 )
@@ -87,12 +88,17 @@ for board in boards:
     prediction = predictor.predict(board)
     print(prediction.fen)
 
-# 3. Single Square Classification
+# 3. Multi-Page PDF Prediction
+pdf_predictor = PDFPredictor()
+for result in pdf_predictor.predict("document.pdf"):
+    print(f"{result.label}: {result.prediction.fen}")
+
+# 4. Single Square Classification
 classifier = PieceClassifier()
 square_prediction = classifier.predict_square("square.png")
 print(f"{square_prediction.name} [{square_prediction.confidence:.2%}]")
 
-# 4. Batch Squares Classification
+# 5. Batch Squares Classification
 batch_predictions = classifier.predict_squares(["e4.png", "e5.png"])
 for prediction in batch_predictions:
     print(f"{prediction.name} [{prediction.confidence:.2%}]")
