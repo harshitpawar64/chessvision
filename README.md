@@ -44,6 +44,9 @@ pip install chessvision
 # Predict chess positions from a board, screenshot, or book page
 chessvision board chessboard.png
 
+# Predict directly from clipboard (screenshot or copied image)
+chessvision board
+
 # Predict chess positions from a PDF document
 chessvision pdf document.pdf
 
@@ -126,6 +129,9 @@ for prediction in batch_predictions:
 |  `[KQkq]` | Specific castling rights (e.g. KQkq, KQ, Qk) |
 
 ```bash
+# Predict from clipboard (screenshot or copied image)
+chessvision board
+
 # Specify board perspective explicitly
 chessvision board chessboard.png --orientation black
 chessvision board chessboard.png -o white

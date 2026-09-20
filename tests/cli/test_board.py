@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock
 
 import pytest
+from PIL import Image
 from typer.testing import CliRunner
 
 from chessvision.cli import app
@@ -107,3 +108,37 @@ def test_board_open_in_browser(
     result = runner.invoke(app, ["board", "assets/chessboard.png", "--open"])
     assert result.exit_code == 0
     mock_launch.assert_called_once()
+
+
+def test_board_clipboard_image(
+    runner: CliRunner, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    img = Image.open("assets/chessboard.png")
+    monkeypatch.setattr("chessvision.cli.board.ImageGrab.grabclipboard", lambda: img)
+
+    result = runner.invoke(app, ["board"])
+    assert result.exit_code == 0
+    assert "FEN:" in result.stdout
+
+
+def test_board_clipboard_list(
+    runner: CliRunner, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(
+        "chessvision.cli.board.ImageGrab.grabclipboard",
+        lambda: ["assets/chessboard.png"],
+    )
+
+    result = runner.invoke(app, ["board"])
+    assert result.exit_code == 0
+    assert "FEN:" in result.stdout
+
+
+def test_board_clipboard_empty(
+    runner: CliRunner, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr("chessvision.cli.board.ImageGrab.grabclipboard", lambda: None)
+
+    result = runner.invoke(app, ["board"])
+    assert result.exit_code == 1
+    assert "No image found in clipboard." in result.stderr

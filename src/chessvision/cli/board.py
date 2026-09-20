@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Annotated
 
 import typer
+from PIL import Image, ImageGrab
 
 from chessvision import BoardDetector, BoardPredictor, Orientation, Turn
 from chessvision.cli.utils import report_validation_errors
@@ -23,15 +24,15 @@ def castling_callback(value: str) -> str:
 
 def board(
     image: Annotated[
-        Path,
+        Path | None,
         typer.Argument(
             exists=True,
             file_okay=True,
             dir_okay=False,
             readable=True,
-            help="Path to image.",
+            help=r"Path to image. [dim]\[default: clipboard][/]",
         ),
-    ],
+    ] = None,
     orientation: Annotated[
         Orientation, typer.Option("--orientation", "-o", help="Board perspective.")
     ] = Orientation.AUTO,
@@ -52,8 +53,21 @@ def board(
     ] = False,
 ) -> None:
     """Predicts chess positions from a chessboard image."""
+    if not image:
+        grabbed = ImageGrab.grabclipboard()
+
+        if isinstance(grabbed, Image.Image):
+            img = grabbed
+        elif isinstance(grabbed, list):
+            img = grabbed[0]
+        else:
+            typer.secho("No image found in clipboard.", fg=typer.colors.RED, err=True)
+            raise typer.Exit(1)
+    else:
+        img = image
+
     detector = BoardDetector()
-    boards = detector.detect(image)
+    boards = detector.detect(img)
 
     if not boards:
         typer.secho(
