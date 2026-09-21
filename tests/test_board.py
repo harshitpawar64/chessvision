@@ -61,6 +61,20 @@ def test_board_prediction_url() -> None:
     )
 
 
+def test_board_prediction_pgn() -> None:
+    prediction = BoardPrediction(
+        fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        squares={},
+        confidence=1.0,
+        orientation=Orientation.WHITE,
+    )
+    assert '[SetUp "1"]' in prediction.pgn
+    assert (
+        '[FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"]'
+        in prediction.pgn
+    )
+
+
 def test_slice_board() -> None:
     crops = slice_board("assets/chessboard.png")
     assert len(crops) == 64

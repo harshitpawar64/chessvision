@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import chess
+import chess.pgn
 import numpy as np
 from chess import Status
 from PIL import Image
@@ -79,6 +80,16 @@ class BoardPrediction:
     def url(self) -> str:
         fen_slug = self.fen.replace(" ", "_")
         return f"https://lichess.org/editor/{fen_slug}?color={self.orientation}"
+
+    @property
+    def pgn(self) -> str:
+        game = chess.pgn.Game()
+        game.setup(self.fen)
+
+        game.headers["FEN"] = self.fen
+        game.headers["SetUp"] = "1"
+
+        return str(game)
 
 
 class BoardPredictor:
