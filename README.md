@@ -150,9 +150,17 @@ chessvision board chessboard.png --open
 
 ### `chessvision pdf`
 
+| **Flag**   | **Short** | **Default** | **Description**          |
+|------------|:---------:|:-----------:|--------------------------|
+| `--output` |    `-o`   |    `None`   | Path to output PGN file. |
+
 ```bash
 # Predict chess positions from a PDF document
 chessvision pdf document.pdf
+
+# Export detected positions to a PGN file
+chessvision pdf document.pdf --output positions.pgn
+chessvision pdf document.pdf -o positions.pgn
 ```
 
 ### `chessvision square`

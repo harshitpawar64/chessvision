@@ -64,3 +64,66 @@ def test_pdf_multiple_boards(
     assert "Page 2 - Board #2" in result.stdout
     assert "Illegal position detected:" in result.stderr
     assert "Page 2 - Board #2: Board is empty" in result.stderr
+
+
+def test_pdf_output(
+    runner: CliRunner, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pdf_path = tmp_path / "test.pdf"
+    doc = pdfium.PdfDocument.new()
+    doc.new_page(200, 200)
+    doc.save(pdf_path)
+    doc.close()
+
+    mock_valid = MagicMock(
+        fen="8/8/8/8/8/8/8/8 w - - 0 1",
+        confidence=0.95,
+        is_valid=True,
+        pgn='[Event "?"]\n[SetUp "1"]\n[FEN "8/8/8/8/8/8/8/8 w - - 0 1"]\n\n*',
+    )
+
+    monkeypatch.setattr(
+        "chessvision.pdf.BoardDetector.detect", MagicMock(return_value=["board_1"])
+    )
+    monkeypatch.setattr(
+        "chessvision.pdf.BoardPredictor.predict", MagicMock(return_value=mock_valid)
+    )
+
+    out_file = tmp_path / "sub" / "output.pgn"
+    result = runner.invoke(app, ["pdf", str(pdf_path), "-o", str(out_file)])
+    assert result.exit_code == 0
+    assert result.stdout == ""
+    assert out_file.exists()
+    assert '[FEN "8/8/8/8/8/8/8/8 w - - 0 1"]' in out_file.read_text(encoding="utf-8")
+
+
+def test_pdf_output_write_error(
+    runner: CliRunner, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pdf_path = tmp_path / "test.pdf"
+    doc = pdfium.PdfDocument.new()
+    doc.new_page(200, 200)
+    doc.save(pdf_path)
+    doc.close()
+
+    mock_valid = MagicMock(
+        fen="8/8/8/8/8/8/8/8 w - - 0 1",
+        confidence=0.95,
+        is_valid=True,
+        pgn='[Event "?"]\n[SetUp "1"]\n[FEN "8/8/8/8/8/8/8/8 w - - 0 1"]\n\n*',
+    )
+
+    monkeypatch.setattr(
+        "chessvision.pdf.BoardDetector.detect", MagicMock(return_value=["board_1"])
+    )
+    monkeypatch.setattr(
+        "chessvision.pdf.BoardPredictor.predict", MagicMock(return_value=mock_valid)
+    )
+    monkeypatch.setattr(
+        Path, "write_text", MagicMock(side_effect=OSError("Permission Error"))
+    )
+
+    out_file = tmp_path / "output.pgn"
+    result = runner.invoke(app, ["pdf", str(pdf_path), "-o", str(out_file)])
+    assert result.exit_code == 1
+    assert "Failed to write output file: Permission Error" in result.stderr
