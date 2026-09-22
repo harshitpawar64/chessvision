@@ -5,10 +5,10 @@ description = "Chess board recognition toolkit"
 readme = "README.md"
 license = "MIT"
 authors = [{ name = "Harshit Pawar", email = "hpchess64@gmail.com" }]
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 dependencies = [
     "chess>=1.11.2",
-    "numpy>=2.5.2",
+    "numpy>=2.4.6",
     "onnxruntime>=1.29.0",
     "opencv-python-headless>=5.0.0.93",
     "pillow>=12.3.0",
@@ -24,6 +24,7 @@ classifiers = [
     "Intended Audience :: End Users/Desktop",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
