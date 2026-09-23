@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.9.0](https://github.com/harshitpawar64/chessvision/compare/v0.8.0...v0.9.0) (2026-09-23)
+
+
+### Features
+
+* **board:** add pgn property to BoardPrediction ([8a33321](https://github.com/harshitpawar64/chessvision/commit/8a333217c98247a6c2f3991ae1097fed44257600))
+* **cli:** add clipboard image fallback to board command ([db1db6b](https://github.com/harshitpawar64/chessvision/commit/db1db6ba97093876f56948868c83cffe2f06d11c))
+* **cli:** add output option to pdf command for pgn export ([aeff387](https://github.com/harshitpawar64/chessvision/commit/aeff38718b5e8ce9f38fdab62fa95a015233225b))
+* **pdf:** implement PDFPredictor for multi-page board prediction ([113d8e9](https://github.com/harshitpawar64/chessvision/commit/113d8e9eb252ff6c9eb9c19bb5512afe355acef0))
+* **project:** support Python &gt;=3.11 ([e5a2094](https://github.com/harshitpawar64/chessvision/commit/e5a2094570716a82f63d776985568c785e62aecd))
+
+
+### Performance Improvements
+
+* **init:** implement lazy loading for top-level exports ([91e8ba9](https://github.com/harshitpawar64/chessvision/commit/91e8ba94f215fb7ebe273c333320c06fde19773d))
+
+
+### Refactor
+
+* **cli:** delegate pdf prediction to PDFPredictor ([1fc1167](https://github.com/harshitpawar64/chessvision/commit/1fc1167e9097eae2a11ca2342202bdea541af2c9))
+
+
+### Documentation
+
+* **readme:** update API usage examples ([48e3785](https://github.com/harshitpawar64/chessvision/commit/48e378563e8b735050f3dfd093d069dde9df9836))
+
 ## [0.8.0](https://github.com/harshitpawar64/chessvision/compare/v0.7.0...v0.8.0) (2026-09-19)
 
 
