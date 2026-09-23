@@ -1,7 +1,7 @@
 import importlib
 from typing import TYPE_CHECKING
 
-__version__ = "0.8.0"  # x-release-please-version
+__version__ = "0.9.0"  # x-release-please-version
 
 __all__ = [
     "BoardDetector",
