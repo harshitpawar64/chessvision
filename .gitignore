@@ -28,6 +28,10 @@ env/
 .ruff_cache/
 
 # Models
+*.pt
 *.onnx
 *.safetensors
 train/models/
+
+# Datasets
+train/datasets/
