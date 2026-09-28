@@ -119,7 +119,8 @@ for prediction in batch_predictions:
 | `--orientation` |    `-o`   |    `auto`   | Board perspective (`auto`, `white`, or `black`).                   |
 | `--turn`        |    `-t`   |    `auto`   | Side to move (`auto`, `white` or `black`).                         |
 | `--castling`    |    `-c`   |    `auto`   | Castling availability (see [castling options](#castling-options)). |
-| `--open`        |           |   `False`   | Open position directly in Lichess editor.                          |
+| `--open`        |           |   `False`   | Open position directly in analysis board.                          |
+| `--site`        |    `-s`   |  `lichess`  | Analysis platform (`chess.com` or `lichess`).                      |
 
 #### Castling Options
 
@@ -145,8 +146,9 @@ chessvision board chessboard.png -c KQ
 chessvision board chessboard.png --turn black
 chessvision board chessboard.png -t white
 
-# Open position directly in Lichess editor
-chessvision board chessboard.png --open
+# Specify analysis platform explicitly
+chessvision board chessboard.png --open --site chess.com
+chessvision board chessboard.png --open -s lichess
 ```
 
 ### `chessvision pdf`

@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Literal
 
 import typer
 from PIL import Image, ImageGrab
@@ -49,8 +49,12 @@ def board(
         ),
     ] = "auto",
     open_in_browser: Annotated[
-        bool, typer.Option("--open", help="Open position in Lichess editor.")
+        bool, typer.Option("--open", help="Open position in browser.")
     ] = False,
+    site: Annotated[
+        Literal["chess.com", "lichess"],
+        typer.Option("--site", "-s", help="Analysis platform."),
+    ] = "lichess",
 ) -> None:
     """Predicts chess positions from a chessboard image."""
     if not image:
@@ -94,7 +98,9 @@ def board(
         if len(boards) > 1 and i < len(boards):
             print()
 
+        url = prediction.chesscom_url if site == "chess.com" else prediction.lichess_url
+
         if open_in_browser:
-            typer.launch(prediction.url)
+            typer.launch(url)
 
     report_validation_errors(invalid_boards, total_boards=len(boards))
