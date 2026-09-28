@@ -1,3 +1,4 @@
+import hashlib
 import urllib.error
 from pathlib import Path
 from unittest.mock import MagicMock
@@ -45,10 +46,14 @@ def test_predict_squares_empty() -> None:
 def test_classifier_download_success(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
+    dummy_text = "dummy model"
+    dummy_sha = hashlib.sha256(dummy_text.encode()).hexdigest()
+
     monkeypatch.setattr(
         "chessvision.classifier.urllib.request.urlretrieve",
-        MagicMock(side_effect=lambda url, filename: filename.write_text("dummy model")),
+        MagicMock(side_effect=lambda url, filename: filename.write_text(dummy_text)),
     )
+    monkeypatch.setattr("chessvision.classifier.MODEL_SHA256", dummy_sha)
 
     model_path = PieceClassifier.get_model_path(cache_dir=tmp_path)
     assert model_path == tmp_path / "chess_piece_classifier.onnx"
@@ -58,13 +63,28 @@ def test_classifier_download_success(
 def test_classifier_download_failure(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-
     monkeypatch.setattr(
         "chessvision.classifier.urllib.request.urlretrieve",
         MagicMock(side_effect=urllib.error.URLError("Network error")),
     )
 
     with pytest.raises(RuntimeError, match="Failed to download model"):
+        PieceClassifier.get_model_path(cache_dir=tmp_path)
+
+    assert not (tmp_path / "chess_piece_classifier.tmp").exists()
+
+
+def test_classifier_download_checksum_mismatch(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    monkeypatch.setattr(
+        "chessvision.classifier.urllib.request.urlretrieve",
+        MagicMock(
+            side_effect=lambda url, filename: filename.write_text("corrupted content")
+        ),
+    )
+
+    with pytest.raises(RuntimeError, match="Checksum mismatch"):
         PieceClassifier.get_model_path(cache_dir=tmp_path)
 
     assert not (tmp_path / "chess_piece_classifier.tmp").exists()
