@@ -78,7 +78,8 @@ print(f"Confidence: {prediction.confidence:.2%}")
 print(f"Valid: {prediction.is_valid}")
 if not prediction.is_valid:
     print(f"Errors: {prediction.validation_errors}")
-print(f"URL: {prediction.url}")
+print(f"Lichess URL: {prediction.lichess_url}")
+print(f"Chess.com URL: {prediction.chesscom_url}")
 
 # Access the chess.Board object directly
 board = prediction.board

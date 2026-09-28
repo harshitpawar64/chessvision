@@ -48,16 +48,37 @@ def test_board_prediction_invalid() -> None:
     assert prediction.validation_errors == ["Invalid FEN syntax"]
 
 
-def test_board_prediction_url() -> None:
-    prediction = BoardPrediction(
+def test_board_prediction_urls_white() -> None:
+    prediction_white = BoardPrediction(
         fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
         squares={},
         confidence=1.0,
         orientation=Orientation.WHITE,
     )
     assert (
-        prediction.url
-        == "https://lichess.org/editor/rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR_w_KQkq_-_0_1?color=white"
+        prediction_white.lichess_url
+        == "https://lichess.org/analysis/rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR_w_KQkq_-_0_1?color=white"
+    )
+    assert (
+        prediction_white.chesscom_url
+        == "https://www.chess.com/analysis?fen=rnbqkbnr%2Fpppppppp%2F8%2F8%2F8%2F8%2FPPPPPPPP%2FRNBQKBNR+w+KQkq+-+0+1"
+    )
+
+
+def test_board_prediction_urls_black() -> None:
+    prediction_black = BoardPrediction(
+        fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        squares={},
+        confidence=1.0,
+        orientation=Orientation.BLACK,
+    )
+    assert (
+        prediction_black.lichess_url
+        == "https://lichess.org/analysis/rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR_w_KQkq_-_0_1?color=black"
+    )
+    assert (
+        prediction_black.chesscom_url
+        == "https://www.chess.com/analysis?fen=rnbqkbnr%2Fpppppppp%2F8%2F8%2F8%2F8%2FPPPPPPPP%2FRNBQKBNR+w+KQkq+-+0+1&flip=true"
     )
 
 

@@ -77,9 +77,19 @@ class BoardPrediction:
         return "\n".join(lines)
 
     @property
-    def url(self) -> str:
+    def chesscom_url(self) -> str:
+        fen_slug = self.fen.replace("/", "%2F").replace(" ", "+")
+        flip = "&flip=true" if self.orientation == Orientation.BLACK else ""
+        return f"https://www.chess.com/analysis?fen={fen_slug}{flip}"
+
+    @property
+    def lichess_url(self) -> str:
         fen_slug = self.fen.replace(" ", "_")
-        return f"https://lichess.org/editor/{fen_slug}?color={self.orientation}"
+        return f"https://lichess.org/analysis/{fen_slug}?color={self.orientation}"
+
+    @property
+    def url(self) -> str:
+        return self.lichess_url
 
     @property
     def pgn(self) -> str:
