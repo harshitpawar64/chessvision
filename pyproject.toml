@@ -71,3 +71,4 @@ split-on-trailing-comma = false
 
 [tool.pytest.ini_options]
 addopts = "--cov=chessvision --cov-report=term-missing --cov-report=xml --cov-branch -v"
+testpaths = ["tests"]
