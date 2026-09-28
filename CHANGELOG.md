@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.10.0](https://github.com/harshitpawar64/chessvision/compare/v0.9.0...v0.10.0) (2026-09-28)
+
+
+### Features
+
+* **board:** add chesscom_url and lichess_url properties to BoardPrediction ([cfd636b](https://github.com/harshitpawar64/chessvision/commit/cfd636ba8d04ffb23f0d2f96873691982654076a))
+* **classifier:** update inference pipeline for yolo26n and verify model integrity with sha256 ([5c82142](https://github.com/harshitpawar64/chessvision/commit/5c821422b7f1feb42a33ac1aaa6696bb5030796b))
+* **cli:** add site option to board command for lichess and chess.com ([d039dbc](https://github.com/harshitpawar64/chessvision/commit/d039dbc491f8b8c7a9e92bd2e8939575b8019116))
+
+
+### Performance Improvements
+
+* **train:** migrate to yolo26n-cls for faster inference and higher accuracy ([8b2e4b2](https://github.com/harshitpawar64/chessvision/commit/8b2e4b249461dd71cb45726dac31b35425ef75a4))
+
 ## [0.9.0](https://github.com/harshitpawar64/chessvision/compare/v0.8.0...v0.9.0) (2026-09-23)
 
 
