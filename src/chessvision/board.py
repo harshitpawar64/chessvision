@@ -88,10 +88,6 @@ class BoardPrediction:
         return f"https://lichess.org/analysis/{fen_slug}?color={self.orientation}"
 
     @property
-    def url(self) -> str:
-        return self.lichess_url
-
-    @property
     def pgn(self) -> str:
         game = chess.pgn.Game()
         game.setup(self.fen)
