@@ -1,0 +1,23 @@
+name: Release Please
+
+on:
+  workflow_call:
+    outputs:
+      release_created:
+        description: "Whether a release was created"
+        value: ${{ jobs.release-please.outputs.release_created }}
+      tag_name:
+        description: "The release tag created"
+        value: ${{ jobs.release-please.outputs.tag_name }}
+
+jobs:
+  release-please:
+    name: Release Please
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      release_created: ${{ steps.release-please.outputs.release_created }}
+      tag_name: ${{ steps.release-please.outputs.tag_name }}
+    steps:
+      - uses: googleapis/release-please-action@v5
+        id: release-please
