@@ -5,7 +5,7 @@ import pypdfium2 as pdfium
 import typer
 
 from chessvision import PDFPredictor
-from chessvision.cli.utils import report_validation_errors
+from chessvision.cli.utils import report_validation_errors, setup_logging
 
 
 def pdf(
@@ -22,8 +22,13 @@ def pdf(
     output: Annotated[
         Path | None, typer.Option("--output", "-o", help="Path to output file (.pgn).")
     ] = None,
+    verbose: Annotated[
+        bool, typer.Option("--verbose", "-v", help="Enable verbose logging.")
+    ] = False,
 ) -> None:
     """Predicts chess positions from a PDF document."""
+    setup_logging(verbose)
+
     pdf_predictor = PDFPredictor()
 
     total_boards = 0

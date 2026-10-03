@@ -1,6 +1,8 @@
+import logging
+
 import pytest
 
-from chessvision.cli.utils import report_validation_errors
+from chessvision.cli.utils import report_validation_errors, setup_logging
 
 
 def test_report_validation_errors_max_display(
@@ -14,3 +16,18 @@ def test_report_validation_errors_max_display(
     assert "- Board #10: Invalid position" in captured.err
     assert "- Board #11:" not in captured.err
     assert "... and 4 more." in captured.err
+
+
+def test_setup_logging(monkeypatch: pytest.MonkeyPatch) -> None:
+    logger = logging.getLogger("chessvision")
+    monkeypatch.setattr(logger, "handlers", [])
+
+    setup_logging(verbose=False)
+    assert not logger.handlers
+
+    setup_logging(verbose=True)
+    assert len(logger.handlers) == 1
+    assert logger.level == logging.DEBUG
+
+    setup_logging(verbose=True)
+    assert len(logger.handlers) == 1

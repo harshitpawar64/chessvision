@@ -1,8 +1,11 @@
+import logging
 from pathlib import Path
 
 import cv2
 import numpy as np
 from PIL import Image
+
+logger = logging.getLogger(__name__)
 
 
 class BoardDetector:
@@ -23,6 +26,8 @@ class BoardDetector:
         gray = cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2GRAY)
 
         height, width = gray.shape
+        logger.debug("Starting board detection on image (%dx%d)", width, height)
+
         min_size = min(height, width) * self.min_size_ratio
         max_size = min(height, width) * self.max_size_ratio
 
@@ -32,6 +37,7 @@ class BoardDetector:
         _, binary = cv2.threshold(gray, 0, 255, threshold_mode | cv2.THRESH_OTSU)
         binary = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8))
         contours, _ = cv2.findContours(binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        logger.debug("Found %d raw contours in image", len(contours))
 
         candidates = []
         for contour in contours:
@@ -53,14 +59,22 @@ class BoardDetector:
                 candidates, scores, score_threshold=0.0, nms_threshold=0.3
             )
             selected = [candidates[i] for i in indices]
+            logger.debug(
+                "NMS selected %d chessboard candidate(s) from %d",
+                len(selected),
+                len(candidates),
+            )
 
             # Sort into reading order (top-to-bottom, left-to-right)
             selected.sort(key=lambda box: (box[1] // (box[3] // 2), box[0]))
             return [img.crop((x, y, x + w, y + h)) for x, y, w, h in selected]
 
+        logger.debug("No candidates found via contours; evaluating full-image fallback")
         if 0.95 <= width / height <= 1.05 and self._is_8x8_board(gray):
+            logger.debug("Full image verified as 8x8 chessboard")
             return [img]
 
+        logger.debug("No chessboard detected in image")
         return []
 
     @staticmethod
@@ -80,4 +94,13 @@ class BoardDetector:
         ratio_x = dx[grid_index].mean() / (dx[mid_index].mean() + 1e-5)
         ratio_y = dy[grid_index].mean() / (dy[mid_index].mean() + 1e-5)
 
-        return contrast > 20 and min(ratio_x, ratio_y) > 1.5
+        if contrast > 20 and min(ratio_x, ratio_y) > 1.5:
+            logger.debug(
+                "8x8 board check passed: contrast=%.2f, ratio_x=%.2f, ratio_y=%.2f",
+                contrast,
+                ratio_x,
+                ratio_y,
+            )
+            return True
+
+        return False

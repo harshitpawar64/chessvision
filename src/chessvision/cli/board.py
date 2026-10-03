@@ -5,7 +5,7 @@ import typer
 from PIL import Image, ImageGrab
 
 from chessvision import BoardDetector, BoardPredictor, Orientation, Turn
-from chessvision.cli.utils import report_validation_errors
+from chessvision.cli.utils import report_validation_errors, setup_logging
 
 
 def castling_callback(value: str) -> str:
@@ -55,8 +55,13 @@ def board(
         Literal["chess.com", "lichess"],
         typer.Option("--site", "-s", help="Analysis platform."),
     ] = "lichess",
+    verbose: Annotated[
+        bool, typer.Option("--verbose", "-v", help="Enable verbose logging.")
+    ] = False,
 ) -> None:
     """Predicts chess positions from a chessboard image."""
+    setup_logging(verbose)
+
     if not image:
         grabbed = ImageGrab.grabclipboard()
 

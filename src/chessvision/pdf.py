@@ -1,3 +1,4 @@
+import logging
 from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
@@ -6,6 +7,8 @@ import pypdfium2 as pdfium
 
 from chessvision.board import BoardPrediction, BoardPredictor
 from chessvision.detector import BoardDetector
+
+logger = logging.getLogger(__name__)
 
 _TARGET_PAGE_DIM = 1800
 
@@ -37,17 +40,30 @@ class PDFPredictor:
 
     def predict(self, pdf: Path | str | bytes) -> Iterator[PDFBoardPrediction]:
         with pdfium.PdfDocument(pdf) as doc:
+            total_pages = len(doc)
+            logger.debug("Opening PDF document with %d page(s)", total_pages)
+
             for page_number, page in enumerate(doc, 1):
                 width, height = page.get_size()
                 scale = self.target_page_dim / max(width, height, 1)
                 image = page.render(scale=scale).to_pil()
 
                 boards = self.detector.detect(image)
+                logger.debug(
+                    "Page %d/%d: rendered scale=%.2f, detected %d board(s)",
+                    page_number,
+                    total_pages,
+                    scale,
+                    len(boards),
+                )
                 if not boards:
                     continue
 
                 for i, board_img in enumerate(boards, 1):
                     prediction = self.predictor.predict(board_img)
+                    logger.debug(
+                        "Yielding prediction for page %d board #%d", page_number, i
+                    )
                     yield PDFBoardPrediction(
                         page_number=page_number,
                         board_index=i,

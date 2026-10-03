@@ -4,6 +4,7 @@ from typing import Annotated
 import typer
 
 from chessvision import PieceClassifier
+from chessvision.cli.utils import setup_logging
 
 
 def square(
@@ -17,8 +18,13 @@ def square(
             help="Path to square image.",
         ),
     ],
+    verbose: Annotated[
+        bool, typer.Option("--verbose", "-v", help="Enable verbose logging.")
+    ] = False,
 ) -> None:
     """Predict the chess piece on a single square image."""
+    setup_logging(verbose)
+
     classifier = PieceClassifier()
     prediction = classifier.predict_square(image)
 

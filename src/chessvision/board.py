@@ -1,3 +1,4 @@
+import logging
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -10,6 +11,8 @@ from PIL import Image
 
 from chessvision.classifier import PieceClassifier, SquarePrediction
 from chessvision.constants import PIECES, Orientation, Turn
+
+logger = logging.getLogger(__name__)
 
 STATUS_ERROR_MESSAGES = {
     Status.EMPTY: "Board is empty",
@@ -110,6 +113,7 @@ class BoardPredictor:
         castling: str = "auto",
     ) -> BoardPrediction:
         square_images = slice_board(image)
+        logger.debug("Board sliced into %d squares", len(square_images))
         predictions = self.classifier.predict_squares(square_images)
 
         avg_confidence = np.mean([prediction.confidence for prediction in predictions])
@@ -120,6 +124,9 @@ class BoardPredictor:
         square_map = dict(zip(orientation.grid_coordinates, predictions))
 
         fen = self.fen(square_map=square_map, active_color=turn, castling=castling)
+        logger.debug(
+            "Generated FEN: %s (confidence: %.2f%%)", fen, avg_confidence * 100
+        )
 
         return BoardPrediction(
             fen=fen,
@@ -168,13 +175,23 @@ class BoardPredictor:
         ]
 
         if not white_rows or not black_rows:
+            logger.debug(
+                "Insufficient pieces to infer orientation; defaulting to white"
+            )
             return Orientation.WHITE
 
-        return (
-            Orientation.WHITE
-            if np.mean(white_rows) > np.mean(black_rows)
-            else Orientation.BLACK
+        white_mean = np.mean(white_rows)
+        black_mean = np.mean(black_rows)
+        orientation = (
+            Orientation.WHITE if white_mean > black_mean else Orientation.BLACK
         )
+        logger.debug(
+            "Inferred orientation %s (white_rows_avg=%.2f, black_rows_avg=%.2f)",
+            orientation,
+            white_mean,
+            black_mean,
+        )
+        return orientation
 
     @staticmethod
     def _infer_castling(square_map: dict[str, SquarePrediction]) -> str:
@@ -192,7 +209,9 @@ class BoardPredictor:
             if square_map["a8"].label == "bR":
                 castling_rights += "q"
 
-        return castling_rights if castling_rights else "-"
+        rights = castling_rights if castling_rights else "-"
+        logger.debug("Inferred castling rights: %s", rights)
+        return rights
 
     @staticmethod
     def _infer_turn(square_map: dict[str, SquarePrediction]) -> Turn:
@@ -215,14 +234,19 @@ class BoardPredictor:
         )
 
         if white_in_check and not black_in_check:
+            logger.debug("Inferred turn WHITE (White king is in check)")
             return Turn.WHITE
 
         if black_in_check and not white_in_check:
+            logger.debug("Inferred turn BLACK (Black king is in check)")
             return Turn.BLACK
 
         top_left_square = next(iter(square_map), None)
-
-        return Turn.BLACK if top_left_square == "h1" else Turn.WHITE
+        turn = Turn.BLACK if top_left_square == "h1" else Turn.WHITE
+        logger.debug(
+            "Inferred turn %s based on top-left square (%s)", turn, top_left_square
+        )
+        return turn
 
 
 def slice_board(image: Image.Image | Path | str | np.ndarray) -> list[Image.Image]:

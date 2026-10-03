@@ -1,5 +1,8 @@
 import importlib
+import logging
 from typing import TYPE_CHECKING
+
+logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 __version__ = "0.10.0"  # x-release-please-version
 

@@ -1,4 +1,23 @@
+import logging
+
 import typer
+
+
+def setup_logging(verbose: bool = False) -> None:
+    if not verbose:
+        return
+
+    logger = logging.getLogger("chessvision")
+    logger.setLevel(logging.DEBUG)
+
+    if any(isinstance(h, logging.StreamHandler) for h in logger.handlers):
+        return
+
+    handler = logging.StreamHandler()
+    handler.setLevel(logging.DEBUG)
+    handler.setFormatter(logging.Formatter("%(levelname)s [%(name)s]: %(message)s"))
+
+    logger.addHandler(handler)
 
 
 def report_validation_errors(errors: dict[str, list[str]], total_boards: int) -> None:
