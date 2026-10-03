@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.11.0](https://github.com/harshitpawar64/chessvision/compare/v0.10.0...v0.11.0) (2026-10-03)
+
+
+### Features
+
+* **logging:** add diagnostic logging and verbose options in CLI ([de996ca](https://github.com/harshitpawar64/chessvision/commit/de996cabb012eb34538959ad2a3b6b09da343a3b))
+
+
+### Refactor
+
+* **board:** remove redundant url property from BoardPrediction ([7983046](https://github.com/harshitpawar64/chessvision/commit/7983046edaab6a7960321f57066e12bf57578117))
+
 ## [0.10.0](https://github.com/harshitpawar64/chessvision/compare/v0.9.0...v0.10.0) (2026-09-28)
 
 
