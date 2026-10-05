@@ -94,7 +94,7 @@ def board(
         prediction = predictor.predict(board_img, orientation, turn, castling)
 
         print(prediction.render_board + "\n")
-        print(f"FEN: {prediction.fen}")
+        print(f"FEN: {prediction}")
         print(f"Confidence: {prediction.confidence:.2%}")
 
         if not prediction.is_valid:

@@ -42,6 +42,9 @@ class BoardPrediction:
     confidence: float
     orientation: Orientation
 
+    def __str__(self) -> str:
+        return self.fen
+
     @property
     def board(self) -> chess.Board:
         return chess.Board(self.fen)
