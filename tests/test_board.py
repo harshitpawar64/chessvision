@@ -20,6 +20,7 @@ def test_board_prediction_valid() -> None:
     assert prediction.is_valid is True
     assert isinstance(prediction.board, chess.Board)
     assert prediction.validation_errors == []
+    assert str(prediction) == prediction.fen
 
 
 def test_board_prediction_illegal() -> None:
