@@ -1,11 +1,49 @@
 import logging
+from dataclasses import dataclass
 from pathlib import Path
 
 import cv2
 import numpy as np
 from PIL import Image
 
+from chessvision.constants import BOARD_SIZE
+
 logger = logging.getLogger(__name__)
+
+__all__ = ["BoardDetector"]
+
+# Detection heuristics and constants
+_KERNEL_3X3 = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+_CHECKERBOARD_MASK = (np.arange(8)[:, None] + np.arange(8)) % 2 == 0
+_GRID_INDICES = np.arange(7, 63, 8)
+_MID_INDICES = np.arange(3, 63, 8)
+
+_ASPECT_RATIO_MIN = 0.75
+_ASPECT_RATIO_MAX = 1.35
+_FILL_RATIO_THRESHOLD = 0.95
+_POLYGON_EPSILONS = (0.015, 0.02, 0.03)
+_NMS_THRESHOLD = 0.3
+_MARGIN_RATIO = 0.15
+_DARK_PIXEL_THRESHOLD = 120
+_LINE_DENSITY_THRESHOLD = 0.45
+_FULL_IMAGE_ASPECT_RATIO_MIN = 0.95
+_FULL_IMAGE_ASPECT_RATIO_MAX = 1.05
+
+
+@dataclass(frozen=True, slots=True)
+class _Candidate:
+    box: tuple[int, int, int, int]
+    image: Image.Image
+    score: float = 0.0
+
+    @property
+    def area(self) -> int:
+        _, _, w, h = self.box
+        return w * h
+
+    def sort_key(self) -> tuple[int, int]:
+        x, y, _, h = self.box
+        return (y // max(h // 2, 1), x)
 
 
 class BoardDetector:
@@ -23,40 +61,79 @@ class BoardDetector:
         else:
             img = image.convert("RGB")
 
-        gray = cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2GRAY)
+        arr = np.asarray(img)
+        gray = cv2.cvtColor(arr, cv2.COLOR_RGB2GRAY)
 
         height, width = gray.shape
         logger.debug("Starting board detection on image (%dx%d)", width, height)
 
-        min_size = min(height, width) * self.min_size_ratio
-        max_size = min(height, width) * self.max_size_ratio
+        min_dim = min(height, width)
+        min_size = min_dim * self.min_size_ratio
+        max_size = min_dim * self.max_size_ratio
 
+        # 1. Otsu thresholding for clean digital/scanned diagrams
         threshold_mode = (
             cv2.THRESH_BINARY if gray.mean() < 128 else cv2.THRESH_BINARY_INV
         )
         _, binary = cv2.threshold(gray, 0, 255, threshold_mode | cv2.THRESH_OTSU)
-        binary = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8))
-        contours, _ = cv2.findContours(binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        logger.debug("Found %d raw contours in image", len(contours))
+        binary = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, _KERNEL_3X3)
+        contours_otsu, _ = cv2.findContours(
+            binary, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE
+        )
+
+        blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+        edges = cv2.Canny(blurred, 40, 150)
+        dilated = cv2.dilate(edges, _KERNEL_3X3, iterations=2)
+        contours_canny, _ = cv2.findContours(
+            dilated, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE
+        )
 
         candidates = []
-        for contour in contours:
-            perimeter = cv2.arcLength(contour, True)
-            approx = cv2.approxPolyDP(contour, 0.02 * perimeter, True)
-            if len(approx) == 4:
-                x, y, w, h = cv2.boundingRect(approx)
-                if (
-                    min_size <= w <= max_size
-                    and min_size <= h <= max_size
-                    and 0.95 <= w / h <= 1.05
-                    and self._is_8x8_board(gray[y : y + h, x : x + w])
-                ):
-                    candidates.append((x, y, w, h))
+
+        for contour in (*contours_otsu, *contours_canny):
+            bx, by, bw, bh = cv2.boundingRect(contour)
+            if not (min_size <= bw <= max_size and min_size <= bh <= max_size):
+                continue
+            if not (_ASPECT_RATIO_MIN <= bw / bh <= _ASPECT_RATIO_MAX):
+                continue
+
+            hull = cv2.convexHull(contour)
+            hull_area = cv2.contourArea(hull)
+            fill_ratio = hull_area / (bw * bh + 1e-5)
+
+            if fill_ratio >= _FILL_RATIO_THRESHOLD:
+                # Axis-aligned candidate: snap to exact diagram border
+                sub_gray = gray[by : by + bh, bx : bx + bw]
+                x1, y1, x2, y2 = self._snap_to_board(sub_gray)
+                cropped_gray = sub_gray[y1:y2, x1:x2]
+                if score := self._is_8x8_board(cropped_gray):
+                    crop_pil = img.crop((bx + x1, by + y1, bx + x2, by + y2))
+                    candidates.append(
+                        _Candidate(
+                            (bx + x1, by + y1, x2 - x1, y2 - y1), crop_pil, score
+                        )
+                    )
+            elif fill_ratio >= 0.5:
+                # Skewed / perspective quad candidate: fit quad & dewarp
+                peri = cv2.arcLength(hull, True)
+                for eps in _POLYGON_EPSILONS:
+                    approx = cv2.approxPolyDP(hull, eps * peri, True)
+                    if len(approx) == 4 and cv2.isContourConvex(approx):
+                        pts = approx.reshape(4, 2).astype(np.float32)
+                        dewarped = self._dewarp_quad(arr, pts, BOARD_SIZE)
+                        if score := self._is_8x8_board(dewarped):
+                            candidates.append(
+                                _Candidate(
+                                    (bx, by, bw, bh), Image.fromarray(dewarped), score
+                                )
+                            )
+                            break
 
         if candidates:
-            scores = [w * h for _, _, w, h in candidates]
+            boxes = [c.box for c in candidates]
+            scores = [c.score for c in candidates]
             indices = cv2.dnn.NMSBoxes(
-                candidates, scores, score_threshold=0.0, nms_threshold=0.3
+                boxes, scores, score_threshold=0.0, nms_threshold=_NMS_THRESHOLD
             )
             selected = [candidates[i] for i in indices]
             logger.debug(
@@ -64,13 +141,16 @@ class BoardDetector:
                 len(selected),
                 len(candidates),
             )
-
-            # Sort into reading order (top-to-bottom, left-to-right)
-            selected.sort(key=lambda box: (box[1] // (box[3] // 2), box[0]))
-            return [img.crop((x, y, x + w, y + h)) for x, y, w, h in selected]
+            selected.sort(key=_Candidate.sort_key)
+            return [c.image for c in selected]
 
         logger.debug("No candidates found via contours; evaluating full-image fallback")
-        if 0.95 <= width / height <= 1.05 and self._is_8x8_board(gray):
+        if (
+            _FULL_IMAGE_ASPECT_RATIO_MIN
+            <= width / height
+            <= _FULL_IMAGE_ASPECT_RATIO_MAX
+            and self._is_8x8_board(gray)
+        ):
             logger.debug("Full image verified as 8x8 chessboard")
             return [img]
 
@@ -78,29 +158,106 @@ class BoardDetector:
         return []
 
     @staticmethod
-    def _is_8x8_board(crop: np.ndarray) -> bool:
+    def _is_8x8_board(crop: np.ndarray) -> float | None:
+        if min(crop.shape[:2]) < 64:
+            return None
+
+        if crop.ndim == 3:
+            crop = cv2.cvtColor(crop, cv2.COLOR_RGB2GRAY)
+
         resized_crop = cv2.resize(crop, (64, 64), interpolation=cv2.INTER_AREA)
         squares = resized_crop.reshape(8, 8, 8, 8).swapaxes(1, 2)
 
         medians = np.median(squares, axis=(2, 3))
-        parity = (np.arange(8)[:, None] + np.arange(8)) % 2 == 0
-        contrast = abs(np.median(medians[parity]) - np.median(medians[~parity]))
+        contrast = abs(
+            np.median(medians[_CHECKERBOARD_MASK])
+            - np.median(medians[~_CHECKERBOARD_MASK])
+        )
 
-        dx = np.diff(resized_crop, axis=1).mean(axis=0)
-        dy = np.diff(resized_crop, axis=0).mean(axis=1)
-        grid_index = np.arange(7, 63, 8)
-        mid_index = np.arange(3, 63, 8)
+        if contrast <= 20:
+            return None
 
-        ratio_x = dx[grid_index].mean() / (dx[mid_index].mean() + 1e-5)
-        ratio_y = dy[grid_index].mean() / (dy[mid_index].mean() + 1e-5)
+        if contrast > 40:
+            logger.debug("8x8 board check passed: contrast=%.2f", contrast)
+            return contrast
 
-        if contrast > 20 and min(ratio_x, ratio_y) > 1.5:
+        dx, dy = cv2.spatialGradient(resized_crop)
+        gx = np.abs(dx).mean(axis=0)
+        gy = np.abs(dy).mean(axis=1)
+
+        ratio_x = gx[_GRID_INDICES].mean() / (gx[_MID_INDICES].mean() + 1e-5)
+        ratio_y = gy[_GRID_INDICES].mean() / (gy[_MID_INDICES].mean() + 1e-5)
+
+        if min(ratio_x, ratio_y) > 1.3:
             logger.debug(
                 "8x8 board check passed: contrast=%.2f, ratio_x=%.2f, ratio_y=%.2f",
                 contrast,
                 ratio_x,
                 ratio_y,
             )
-            return True
+            return contrast
 
-        return False
+        return None
+
+    @staticmethod
+    def _dewarp_quad(
+        img: np.ndarray, quad_pts: np.ndarray, target_size: int = BOARD_SIZE
+    ) -> np.ndarray:
+        s = quad_pts.sum(axis=1)
+        diff = np.diff(quad_pts, axis=1)
+        src = np.array(
+            [
+                quad_pts[np.argmin(s)],
+                quad_pts[np.argmin(diff)],
+                quad_pts[np.argmax(s)],
+                quad_pts[np.argmax(diff)],
+            ],
+            dtype=np.float32,
+        )
+        dst = np.array(
+            [[0, 0], [target_size, 0], [target_size, target_size], [0, target_size]],
+            dtype=np.float32,
+        )
+        matrix = cv2.getPerspectiveTransform(src, dst)
+        return cv2.warpPerspective(
+            img, matrix, (target_size, target_size), flags=cv2.INTER_CUBIC
+        )
+
+    @staticmethod
+    def _snap_to_board(gray: np.ndarray) -> tuple[int, int, int, int]:
+        h, w = gray.shape[:2]
+        margin_x = int(w * _MARGIN_RATIO)
+        margin_y = int(h * _MARGIN_RATIO)
+        if margin_x <= 0 or margin_y <= 0:
+            return (0, 0, w, h)
+
+        dark = gray < _DARK_PIXEL_THRESHOLD
+
+        # Locate continuous dark border lines along margins
+        top_matches = np.flatnonzero(
+            dark[:margin_y, margin_x:-margin_x].mean(axis=1) > _LINE_DENSITY_THRESHOLD
+        )
+        top = int(top_matches[0]) if top_matches.size > 0 else 0
+
+        bottom_matches = np.flatnonzero(
+            dark[h - margin_y :, margin_x:-margin_x].mean(axis=1)
+            > _LINE_DENSITY_THRESHOLD
+        )
+        bottom = (
+            int(h - margin_y + bottom_matches[-1]) if bottom_matches.size > 0 else h - 1
+        )
+
+        left_matches = np.flatnonzero(
+            dark[margin_y:-margin_y, :margin_x].mean(axis=0) > _LINE_DENSITY_THRESHOLD
+        )
+        left = int(left_matches[0]) if left_matches.size > 0 else 0
+
+        right_matches = np.flatnonzero(
+            dark[margin_y:-margin_y, w - margin_x :].mean(axis=0)
+            > _LINE_DENSITY_THRESHOLD
+        )
+        right = (
+            int(w - margin_x + right_matches[-1]) if right_matches.size > 0 else w - 1
+        )
+
+        return (left, top, right + 1, bottom + 1)

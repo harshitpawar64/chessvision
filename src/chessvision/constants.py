@@ -1,6 +1,7 @@
 from enum import StrEnum, auto
 
 IMAGE_SIZE = 64
+BOARD_SIZE = 512
 
 PIECES = {
     "empty": ".",
