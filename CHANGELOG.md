@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.11.0](https://github.com/harshitpawar64/chessvision/compare/v0.10.0...v0.11.0) (2026-10-09)
+
+
+### Features
+
+* **board:** implement __str__ on BoardPrediction ([3916dc4](https://github.com/harshitpawar64/chessvision/commit/3916dc49417aef93d362741dd058d1143af76052))
+* **detector:** improve board detection pipeline and NMS contrast scoring ([3104208](https://github.com/harshitpawar64/chessvision/commit/3104208b885acee1eef0fb43208b0d7bbd4589bd))
+* **detector:** return DetectedBoard from BoardDetector.detect ([a3134e1](https://github.com/harshitpawar64/chessvision/commit/a3134e13cd12e5e3021625e7c3f7463c4f26b40c))
+* **logging:** add diagnostic logging and verbose options in CLI ([de996ca](https://github.com/harshitpawar64/chessvision/commit/de996cabb012eb34538959ad2a3b6b09da343a3b))
+
+
+### Refactor
+
+* **board:** remove redundant url property from BoardPrediction ([7983046](https://github.com/harshitpawar64/chessvision/commit/7983046edaab6a7960321f57066e12bf57578117))
+
 ## [0.10.0](https://github.com/harshitpawar64/chessvision/compare/v0.9.0...v0.10.0) (2026-09-28)
 
 
