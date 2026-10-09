@@ -10,7 +10,7 @@ from chessvision.constants import BOARD_SIZE
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["BoardDetector"]
+__all__ = ["BoardDetector", "DetectedBoard"]
 
 # Detection heuristics and constants
 _KERNEL_3X3 = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
@@ -31,19 +31,10 @@ _FULL_IMAGE_ASPECT_RATIO_MAX = 1.05
 
 
 @dataclass(frozen=True, slots=True)
-class _Candidate:
-    box: tuple[int, int, int, int]
+class DetectedBoard:
     image: Image.Image
+    box: tuple[int, int, int, int]
     score: float = 0.0
-
-    @property
-    def area(self) -> int:
-        _, _, w, h = self.box
-        return w * h
-
-    def sort_key(self) -> tuple[int, int]:
-        x, y, _, h = self.box
-        return (y // max(h // 2, 1), x)
 
 
 class BoardDetector:
@@ -53,7 +44,9 @@ class BoardDetector:
         self.min_size_ratio = min_size_ratio
         self.max_size_ratio = max_size_ratio
 
-    def detect(self, image: Image.Image | Path | str | np.ndarray) -> list[Image.Image]:
+    def detect(
+        self, image: Image.Image | Path | str | np.ndarray
+    ) -> list[DetectedBoard]:
         if isinstance(image, (Path, str)):
             img = Image.open(image).convert("RGB")
         elif isinstance(image, np.ndarray):
@@ -109,8 +102,10 @@ class BoardDetector:
                 if score := self._is_8x8_board(cropped_gray):
                     crop_pil = img.crop((bx + x1, by + y1, bx + x2, by + y2))
                     candidates.append(
-                        _Candidate(
-                            (bx + x1, by + y1, x2 - x1, y2 - y1), crop_pil, score
+                        DetectedBoard(
+                            image=crop_pil,
+                            box=(bx + x1, by + y1, x2 - x1, y2 - y1),
+                            score=score,
                         )
                     )
             elif fill_ratio >= 0.5:
@@ -123,8 +118,10 @@ class BoardDetector:
                         dewarped = self._dewarp_quad(arr, pts, BOARD_SIZE)
                         if score := self._is_8x8_board(dewarped):
                             candidates.append(
-                                _Candidate(
-                                    (bx, by, bw, bh), Image.fromarray(dewarped), score
+                                DetectedBoard(
+                                    image=Image.fromarray(dewarped),
+                                    box=(bx, by, bw, bh),
+                                    score=score,
                                 )
                             )
                             break
@@ -141,18 +138,18 @@ class BoardDetector:
                 len(selected),
                 len(candidates),
             )
-            selected.sort(key=_Candidate.sort_key)
-            return [c.image for c in selected]
+            selected.sort(key=lambda b: (b.box[1] // max(b.box[3] // 2, 1), b.box[0]))
+            return selected
 
         logger.debug("No candidates found via contours; evaluating full-image fallback")
         if (
             _FULL_IMAGE_ASPECT_RATIO_MIN
             <= width / height
             <= _FULL_IMAGE_ASPECT_RATIO_MAX
-            and self._is_8x8_board(gray)
+            and (score := self._is_8x8_board(gray))
         ):
             logger.debug("Full image verified as 8x8 chessboard")
-            return [img]
+            return [DetectedBoard(image=img, box=(0, 0, width, height), score=score)]
 
         logger.debug("No chessboard detected in image")
         return []

@@ -59,8 +59,8 @@ class PDFPredictor:
                 if not boards:
                     continue
 
-                for i, board_img in enumerate(boards, 1):
-                    prediction = self.predictor.predict(board_img)
+                for i, detected_board in enumerate(boards, 1):
+                    prediction = self.predictor.predict(detected_board)
                     logger.debug(
                         "Yielding prediction for page %d board #%d", page_number, i
                     )

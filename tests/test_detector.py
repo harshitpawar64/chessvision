@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from PIL import Image
 
-from chessvision.detector import BoardDetector
+from chessvision.detector import BoardDetector, DetectedBoard
 
 detector = BoardDetector()
 
@@ -10,7 +10,7 @@ detector = BoardDetector()
 def test_detect_board() -> None:
     boards = detector.detect("assets/chessboard.png")
     assert len(boards) == 1
-    assert isinstance(boards[0], Image.Image)
+    assert isinstance(boards[0], DetectedBoard)
 
 
 def test_detect_pil() -> None:

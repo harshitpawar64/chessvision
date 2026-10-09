@@ -87,11 +87,11 @@ def board(
     predictor = BoardPredictor()
 
     invalid_boards = {}
-    for i, board_img in enumerate(boards, 1):
+    for i, detected_board in enumerate(boards, 1):
         if len(boards) > 1:
             typer.secho(f"Board #{i}".center(21), bold=True)
 
-        prediction = predictor.predict(board_img, orientation, turn, castling)
+        prediction = predictor.predict(detected_board, orientation, turn, castling)
 
         print(prediction.render_board + "\n")
         print(f"FEN: {prediction}")

@@ -11,6 +11,7 @@ from PIL import Image
 
 from chessvision.classifier import PieceClassifier, SquarePrediction
 from chessvision.constants import PIECES, Orientation, Turn
+from chessvision.detector import DetectedBoard
 
 logger = logging.getLogger(__name__)
 
@@ -110,7 +111,7 @@ class BoardPredictor:
 
     def predict(
         self,
-        image: Image.Image | Path | str | np.ndarray,
+        image: DetectedBoard | Image.Image | Path | str | np.ndarray,
         orientation: Orientation = Orientation.AUTO,
         turn: Turn = Turn.AUTO,
         castling: str = "auto",
@@ -252,8 +253,12 @@ class BoardPredictor:
         return turn
 
 
-def slice_board(image: Image.Image | Path | str | np.ndarray) -> list[Image.Image]:
-    if isinstance(image, (Path, str)):
+def slice_board(
+    image: DetectedBoard | Image.Image | Path | str | np.ndarray,
+) -> list[Image.Image]:
+    if isinstance(image, DetectedBoard):
+        img = image.image
+    elif isinstance(image, (Path, str)):
         img = Image.open(image).convert("RGB")
     elif isinstance(image, np.ndarray):
         img = Image.fromarray(image).convert("RGB")

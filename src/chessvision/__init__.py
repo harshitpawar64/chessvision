@@ -10,6 +10,7 @@ __all__ = [
     "BoardDetector",
     "BoardPrediction",
     "BoardPredictor",
+    "DetectedBoard",
     "Orientation",
     "PDFBoardPrediction",
     "PDFPredictor",
@@ -23,7 +24,7 @@ if TYPE_CHECKING:
     from chessvision.board import BoardPrediction, BoardPredictor
     from chessvision.classifier import PieceClassifier, SquarePrediction
     from chessvision.constants import Orientation, Turn
-    from chessvision.detector import BoardDetector
+    from chessvision.detector import BoardDetector, DetectedBoard
     from chessvision.pdf import PDFBoardPrediction, PDFPredictor
 
 
@@ -31,6 +32,7 @@ _LAZY_IMPORTS = {
     "BoardDetector": "chessvision.detector",
     "BoardPrediction": "chessvision.board",
     "BoardPredictor": "chessvision.board",
+    "DetectedBoard": "chessvision.detector",
     "Orientation": "chessvision.constants",
     "PDFBoardPrediction": "chessvision.pdf",
     "PDFPredictor": "chessvision.pdf",

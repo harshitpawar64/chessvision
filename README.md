@@ -86,11 +86,11 @@ board = prediction.board
 
 # 2. Multi-Board Detection
 detector = BoardDetector()
-boards = detector.detect("page.png")  # Returns list of cropped PIL Images
+boards = detector.detect("page.png")  # Returns list of DetectedBoard objects
 
 for board in boards:
     prediction = predictor.predict(board)
-    print(prediction.fen)
+    print(f"Box: {board.box}, FEN: {prediction.fen}")
 
 # 3. Multi-Page PDF Prediction
 pdf_predictor = PDFPredictor()
