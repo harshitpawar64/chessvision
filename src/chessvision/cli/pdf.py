@@ -52,8 +52,8 @@ def pdf(
                 print(f"FEN: {result.prediction.fen}")
                 print(f"Confidence: {result.prediction.confidence:.2%}")
 
-            if not result.prediction.is_valid:
-                invalid_boards[result.label] = result.prediction.validation_errors
+            if errors := result.prediction.validation_errors:
+                invalid_boards[result.label] = errors
     except pdfium.PdfiumError as e:
         typer.secho(f"Failed to open PDF file: {e}", fg=typer.colors.RED, err=True)
         raise typer.Exit(1)

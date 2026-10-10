@@ -62,7 +62,10 @@ def test_board_multiple_boards_illegal(
     runner: CliRunner, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     mock_prediction_valid = MagicMock(
-        fen="8/8/8/8/8/8/8/8 w - - 0 1", confidence=0.9, is_valid=True
+        fen="8/8/8/8/8/8/8/8 w - - 0 1",
+        confidence=0.9,
+        is_valid=True,
+        validation_errors=[],
     )
     mock_prediction_invalid = MagicMock(
         fen="8/8/8/8/8/8/8/8 w - - 0 1",

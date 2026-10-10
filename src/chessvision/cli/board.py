@@ -97,8 +97,8 @@ def board(
         print(f"FEN: {prediction}")
         print(f"Confidence: {prediction.confidence:.2%}")
 
-        if not prediction.is_valid:
-            invalid_boards[f"Board #{i}"] = prediction.validation_errors
+        if errors := prediction.validation_errors:
+            invalid_boards[f"Board #{i}"] = errors
 
         if len(boards) > 1 and i < len(boards):
             print()

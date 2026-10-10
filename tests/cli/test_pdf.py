@@ -40,7 +40,10 @@ def test_pdf_multiple_boards(
     doc.close()
 
     mock_valid = MagicMock(
-        fen="8/8/8/8/8/8/8/8 w - - 0 1", confidence=0.95, is_valid=True
+        fen="8/8/8/8/8/8/8/8 w - - 0 1",
+        confidence=0.95,
+        is_valid=True,
+        validation_errors=[],
     )
     mock_invalid = MagicMock(
         fen="8/8/8/8/8/8/8/8 w - - 0 1",
@@ -79,6 +82,7 @@ def test_pdf_output(
         fen="8/8/8/8/8/8/8/8 w - - 0 1",
         confidence=0.95,
         is_valid=True,
+        validation_errors=[],
         pgn='[Event "?"]\n[SetUp "1"]\n[FEN "8/8/8/8/8/8/8/8 w - - 0 1"]\n\n*',
     )
 
@@ -110,6 +114,7 @@ def test_pdf_output_write_error(
         fen="8/8/8/8/8/8/8/8 w - - 0 1",
         confidence=0.95,
         is_valid=True,
+        validation_errors=[],
         pgn='[Event "?"]\n[SetUp "1"]\n[FEN "8/8/8/8/8/8/8/8 w - - 0 1"]\n\n*',
     )
 
