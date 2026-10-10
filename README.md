@@ -72,7 +72,7 @@ prediction = predictor.predict(
     "chessboard.png", orientation=Orientation.AUTO, turn=Turn.AUTO, castling="auto"
 )
 
-print(prediction.render_board)
+print(prediction.ascii_board)
 print(f"FEN: {prediction.fen}")
 print(f"Confidence: {prediction.confidence:.2%}")
 print(f"Valid: {prediction.is_valid}")

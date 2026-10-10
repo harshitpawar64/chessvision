@@ -93,7 +93,7 @@ def board(
 
         prediction = predictor.predict(detected_board, orientation, turn, castling)
 
-        print(prediction.render_board + "\n")
+        print(prediction.ascii_board + "\n")
         print(f"FEN: {prediction}")
         print(f"Confidence: {prediction.confidence:.2%}")
 

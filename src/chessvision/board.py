@@ -68,7 +68,7 @@ class BoardPrediction:
         return [msg for flag, msg in STATUS_ERROR_MESSAGES.items() if status & flag]
 
     @property
-    def render_board(self) -> str:
+    def ascii_board(self) -> str:
         border = f"  +{'-' * 17}+"
         lines = [border]
 

@@ -48,7 +48,7 @@ def pdf(
                 header = result.label
                 typer.secho(header.center(21), bold=True)
 
-                print(result.prediction.render_board + "\n")
+                print(result.prediction.ascii_board + "\n")
                 print(f"FEN: {result.prediction.fen}")
                 print(f"Confidence: {result.prediction.confidence:.2%}")
 
