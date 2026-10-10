@@ -1,7 +1,7 @@
 from dataset import DATASET_DIR, TRAIN_DIR
 from ultralytics import YOLO
 
-from chessvision.constants import IMAGE_SIZE
+from chessvision.constants import SQUARE_SIZE
 
 MODELS_DIR = TRAIN_DIR / "models"
 
@@ -13,7 +13,7 @@ def main() -> None:
         epochs=50,
         patience=10,
         batch=256,
-        imgsz=IMAGE_SIZE,
+        imgsz=SQUARE_SIZE,
         project=MODELS_DIR,
         name="chess_piece_classifier",
         exist_ok=True,

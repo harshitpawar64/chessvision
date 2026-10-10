@@ -1,6 +1,6 @@
 from enum import StrEnum, auto
 
-IMAGE_SIZE = 64
+SQUARE_SIZE = 64
 BOARD_SIZE = 512
 
 PIECES = {
@@ -36,8 +36,6 @@ PIECE_NAMES = {
 }
 
 PIECE_CLASSES = tuple(sorted(PIECES))
-
-CLASS_TO_INDEX = {cls_name: index for index, cls_name in enumerate(PIECE_CLASSES)}
 
 _RANKS = ("1", "2", "3", "4", "5", "6", "7", "8")
 _FILES = ("a", "b", "c", "d", "e", "f", "g", "h")

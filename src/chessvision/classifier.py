@@ -12,7 +12,7 @@ from PIL import Image
 from platformdirs import user_cache_path
 
 from chessvision._utils import to_pil_image
-from chessvision.constants import IMAGE_SIZE, PIECE_CLASSES, PIECE_NAMES
+from chessvision.constants import PIECE_CLASSES, PIECE_NAMES, SQUARE_SIZE
 
 logger = logging.getLogger(__name__)
 
@@ -39,9 +39,6 @@ class PieceClassifier:
         self.input_name = self.session.get_inputs()[0].name
         self.output_name = self.session.get_outputs()[0].name
 
-        self.classes = PIECE_CLASSES
-        self.image_size = IMAGE_SIZE
-
     def predict_square(
         self, image: Image.Image | Path | str | np.ndarray
     ) -> SquarePrediction:
@@ -51,7 +48,7 @@ class PieceClassifier:
 
         prediction_index = np.argmax(probs)
 
-        label = self.classes[prediction_index]
+        label = PIECE_CLASSES[prediction_index]
 
         return SquarePrediction(label=label, confidence=probs[prediction_index])
 
@@ -67,7 +64,7 @@ class PieceClassifier:
         prediction_indices = np.argmax(probs, axis=1)
 
         return [
-            SquarePrediction(label=self.classes[index], confidence=probs[i, index])
+            SquarePrediction(label=PIECE_CLASSES[index], confidence=probs[i, index])
             for i, index in enumerate(prediction_indices)
         ]
 
@@ -107,7 +104,7 @@ class PieceClassifier:
         self, image: Image.Image | Path | str | np.ndarray
     ) -> np.ndarray:
         img = to_pil_image(image).resize(
-            (self.image_size, self.image_size), Image.Resampling.BICUBIC
+            (SQUARE_SIZE, SQUARE_SIZE), Image.Resampling.BICUBIC
         )
         arr = np.asarray(img, dtype=np.float32) / 255.0
         return np.transpose(arr, (2, 0, 1))
