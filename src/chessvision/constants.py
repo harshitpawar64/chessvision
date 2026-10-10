@@ -1,5 +1,15 @@
 from enum import StrEnum, auto
 
+__all__ = [
+    "BOARD_SIZE",
+    "PIECES",
+    "PIECE_CLASSES",
+    "PIECE_NAMES",
+    "SQUARE_SIZE",
+    "Orientation",
+    "Turn",
+]
+
 SQUARE_SIZE = 64
 BOARD_SIZE = 512
 

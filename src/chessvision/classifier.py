@@ -16,6 +16,8 @@ from chessvision.constants import PIECE_CLASSES, PIECE_NAMES, SQUARE_SIZE
 
 logger = logging.getLogger(__name__)
 
+__all__ = ["PieceClassifier", "SquarePrediction"]
+
 MODEL_NAME = "chess_piece_classifier.onnx"
 MODEL_SHA256 = "66de5d17f07b822fbb5957615c0880ce02a0cab977c83dafa033f3b71eb4a7fc"
 

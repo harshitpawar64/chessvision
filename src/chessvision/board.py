@@ -16,6 +16,8 @@ from chessvision.detector import DetectedBoard
 
 logger = logging.getLogger(__name__)
 
+__all__ = ["BoardPrediction", "BoardPredictor"]
+
 STATUS_ERROR_MESSAGES = {
     Status.EMPTY: "Board is empty",
     Status.NO_WHITE_KING: "Missing white king",

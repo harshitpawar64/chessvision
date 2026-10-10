@@ -10,6 +10,8 @@ from chessvision.detector import BoardDetector
 
 logger = logging.getLogger(__name__)
 
+__all__ = ["PDFBoardPrediction", "PDFPredictor"]
+
 _TARGET_PAGE_DIM = 1800
 
 
