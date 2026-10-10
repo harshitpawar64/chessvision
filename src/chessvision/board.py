@@ -123,7 +123,9 @@ class BoardPredictor:
         logger.debug("Board sliced into %d squares", len(square_images))
         predictions = self.classifier.predict_squares(square_images)
 
-        avg_confidence = np.mean([prediction.confidence for prediction in predictions])
+        avg_confidence = float(
+            np.mean([prediction.confidence for prediction in predictions])
+        )
 
         if orientation is Orientation.AUTO:
             orientation = self._infer_orientation(predictions)

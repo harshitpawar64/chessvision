@@ -157,9 +157,11 @@ class BoardDetector:
         squares = resized_crop.reshape(8, 8, 8, 8).swapaxes(1, 2)
 
         medians = np.median(squares, axis=(2, 3))
-        contrast = abs(
-            np.median(medians[_CHECKERBOARD_MASK])
-            - np.median(medians[~_CHECKERBOARD_MASK])
+        contrast = float(
+            abs(
+                np.median(medians[_CHECKERBOARD_MASK])
+                - np.median(medians[~_CHECKERBOARD_MASK])
+            )
         )
 
         if contrast <= 20:

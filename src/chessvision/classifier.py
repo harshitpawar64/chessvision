@@ -52,7 +52,7 @@ class PieceClassifier:
 
         label = PIECE_CLASSES[prediction_index]
 
-        return SquarePrediction(label=label, confidence=probs[prediction_index])
+        return SquarePrediction(label=label, confidence=float(probs[prediction_index]))
 
     def predict_squares(
         self, images: Sequence[Image.Image | Path | str | np.ndarray]
@@ -66,7 +66,9 @@ class PieceClassifier:
         prediction_indices = np.argmax(probs, axis=1)
 
         return [
-            SquarePrediction(label=PIECE_CLASSES[index], confidence=probs[i, index])
+            SquarePrediction(
+                label=PIECE_CLASSES[index], confidence=float(probs[i, index])
+            )
             for i, index in enumerate(prediction_indices)
         ]
 
