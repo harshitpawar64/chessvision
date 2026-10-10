@@ -6,13 +6,13 @@ import cv2
 import numpy as np
 from PIL import Image
 
+from chessvision._utils import to_pil_image
 from chessvision.constants import BOARD_SIZE
 
 logger = logging.getLogger(__name__)
 
 __all__ = ["BoardDetector", "DetectedBoard"]
 
-# Detection heuristics and constants
 _KERNEL_3X3 = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
 _CHECKERBOARD_MASK = (np.arange(8)[:, None] + np.arange(8)) % 2 == 0
 _GRID_INDICES = np.arange(7, 63, 8)
@@ -47,13 +47,7 @@ class BoardDetector:
     def detect(
         self, image: Image.Image | Path | str | np.ndarray
     ) -> list[DetectedBoard]:
-        if isinstance(image, (Path, str)):
-            img = Image.open(image).convert("RGB")
-        elif isinstance(image, np.ndarray):
-            img = Image.fromarray(image).convert("RGB")
-        else:
-            img = image.convert("RGB")
-
+        img = to_pil_image(image)
         arr = np.asarray(img)
         gray = cv2.cvtColor(arr, cv2.COLOR_RGB2GRAY)
 
@@ -64,7 +58,6 @@ class BoardDetector:
         min_size = min_dim * self.min_size_ratio
         max_size = min_dim * self.max_size_ratio
 
-        # 1. Otsu thresholding for clean digital/scanned diagrams
         threshold_mode = (
             cv2.THRESH_BINARY if gray.mean() < 128 else cv2.THRESH_BINARY_INV
         )
@@ -95,7 +88,6 @@ class BoardDetector:
             fill_ratio = hull_area / (bw * bh + 1e-5)
 
             if fill_ratio >= _FILL_RATIO_THRESHOLD:
-                # Axis-aligned candidate: snap to exact diagram border
                 sub_gray = gray[by : by + bh, bx : bx + bw]
                 x1, y1, x2, y2 = self._snap_to_board(sub_gray)
                 cropped_gray = sub_gray[y1:y2, x1:x2]
@@ -109,7 +101,6 @@ class BoardDetector:
                         )
                     )
             elif fill_ratio >= 0.5:
-                # Skewed / perspective quad candidate: fit quad & dewarp
                 peri = cv2.arcLength(hull, True)
                 for eps in _POLYGON_EPSILONS:
                     approx = cv2.approxPolyDP(hull, eps * peri, True)
@@ -230,7 +221,6 @@ class BoardDetector:
 
         dark = gray < _DARK_PIXEL_THRESHOLD
 
-        # Locate continuous dark border lines along margins
         top_matches = np.flatnonzero(
             dark[:margin_y, margin_x:-margin_x].mean(axis=1) > _LINE_DENSITY_THRESHOLD
         )

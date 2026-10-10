@@ -9,6 +9,7 @@ import numpy as np
 from chess import Status
 from PIL import Image
 
+from chessvision._utils import to_pil_image
 from chessvision.classifier import PieceClassifier, SquarePrediction
 from chessvision.constants import PIECES, Orientation, Turn
 from chessvision.detector import DetectedBoard
@@ -116,7 +117,7 @@ class BoardPredictor:
         turn: Turn = Turn.AUTO,
         castling: str = "auto",
     ) -> BoardPrediction:
-        square_images = slice_board(image)
+        square_images = _slice_board(image)
         logger.debug("Board sliced into %d squares", len(square_images))
         predictions = self.classifier.predict_squares(square_images)
 
@@ -253,18 +254,10 @@ class BoardPredictor:
         return turn
 
 
-def slice_board(
+def _slice_board(
     image: DetectedBoard | Image.Image | Path | str | np.ndarray,
 ) -> list[Image.Image]:
-    if isinstance(image, DetectedBoard):
-        img = image.image
-    elif isinstance(image, (Path, str)):
-        img = Image.open(image).convert("RGB")
-    elif isinstance(image, np.ndarray):
-        img = Image.fromarray(image).convert("RGB")
-    else:
-        img = image.convert("RGB")
-
+    img = image.image if isinstance(image, DetectedBoard) else to_pil_image(image)
     width, height = img.size
 
     square_w = width / 8

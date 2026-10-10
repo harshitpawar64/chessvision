@@ -11,6 +11,7 @@ import onnxruntime as ort
 from PIL import Image
 from platformdirs import user_cache_path
 
+from chessvision._utils import to_pil_image
 from chessvision.constants import IMAGE_SIZE, PIECE_CLASSES, PIECE_NAMES
 
 logger = logging.getLogger(__name__)
@@ -105,14 +106,9 @@ class PieceClassifier:
     def _preprocess_single(
         self, image: Image.Image | Path | str | np.ndarray
     ) -> np.ndarray:
-        if isinstance(image, (Path, str)):
-            img = Image.open(image).convert("RGB")
-        elif isinstance(image, np.ndarray):
-            img = Image.fromarray(image).convert("RGB")
-        else:
-            img = image.convert("RGB")
-
-        img = img.resize((self.image_size, self.image_size), Image.Resampling.BICUBIC)
+        img = to_pil_image(image).resize(
+            (self.image_size, self.image_size), Image.Resampling.BICUBIC
+        )
         arr = np.asarray(img, dtype=np.float32) / 255.0
         return np.transpose(arr, (2, 0, 1))
 

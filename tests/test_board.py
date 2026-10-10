@@ -1,9 +1,7 @@
 import chess
-import numpy as np
 import pytest
-from PIL import Image
 
-from chessvision.board import BoardPrediction, BoardPredictor, slice_board
+from chessvision.board import BoardPrediction, BoardPredictor
 from chessvision.classifier import PieceClassifier, SquarePrediction
 from chessvision.constants import Orientation, Turn
 
@@ -95,25 +93,6 @@ def test_board_prediction_pgn() -> None:
         '[FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"]'
         in prediction.pgn
     )
-
-
-def test_slice_board() -> None:
-    crops = slice_board("assets/chessboard.png")
-    assert len(crops) == 64
-
-
-def test_slice_board_pil() -> None:
-    img = Image.open("assets/chessboard.png")
-    crops = slice_board(img)
-    assert len(crops) == 64
-
-
-def test_slice_board_arr() -> None:
-    img = Image.open("assets/chessboard.png")
-    arr = np.array(img)
-
-    crops = slice_board(arr)
-    assert len(crops) == 64
 
 
 @pytest.mark.parametrize(
