@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Any
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
-__version__ = "0.11.0"  # x-release-please-version
+__version__ = "0.12.0"  # x-release-please-version
 
 __all__ = [
     "BoardDetector",

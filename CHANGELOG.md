@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.12.0](https://github.com/harshitpawar64/chessvision/compare/v0.11.0...v0.12.0) (2026-10-10)
+
+
+### Features
+
+* **init:** implement `__dir__` for lazy exports ([d22a001](https://github.com/harshitpawar64/chessvision/commit/d22a001cdd25718b3f78d82e89d986415df0e3ec))
+
+
+### Bug Fixes
+
+* prevent numpy scalar types from leaking into dataclasses ([323c9e9](https://github.com/harshitpawar64/chessvision/commit/323c9e90f9d468ccb12ba6a98322092918b8484b))
+
+
+### Refactor
+
+* add `__all__` exports across modules ([143f131](https://github.com/harshitpawar64/chessvision/commit/143f131e4745e9947c957f7ab8a39bad2e8399ea))
+* **board:** make `STATUS_ERROR_MESSAGES` private and enforce strict `zip` ([21df70e](https://github.com/harshitpawar64/chessvision/commit/21df70e57c8994e774ca7abc840a44cd7b9f9fb9))
+* **board:** rename `render_board` property to `ascii_board` ([7840bdc](https://github.com/harshitpawar64/chessvision/commit/7840bdca217716676150ed780c00192f0f188a9a))
+* **classifier:** stream model checksum verification using hashlib.file_digest ([e1e4784](https://github.com/harshitpawar64/chessvision/commit/e1e4784325c5f30850c45812be38293dee41df00))
+* **cli:** check `validation_errors` directly to avoid double validation ([10dad3a](https://github.com/harshitpawar64/chessvision/commit/10dad3ab5e498c05d12a1f8d31ea864bcc75f981))
+* **constants:** rename `IMAGE_SIZE` to `SQUARE_SIZE` and remove unused `CLASS_TO_INDEX` ([459e081](https://github.com/harshitpawar64/chessvision/commit/459e08121a59ccd2d6fb6a28ebda08c914a0bb2e))
+* **detector:** remove redundant default arguments in `DetectedBoard` and `_dewarp_quad` ([4ff6c29](https://github.com/harshitpawar64/chessvision/commit/4ff6c29c459fcc6b20236941c4566f5c9cccd2cf))
+* extract image conversion into `_utils` and make `slice_board` private ([cb672ee](https://github.com/harshitpawar64/chessvision/commit/cb672ee4e109b7950ea2164bdf10dc5e526c0467))
+
 ## [0.11.0](https://github.com/harshitpawar64/chessvision/compare/v0.10.0...v0.11.0) (2026-10-09)
 
 
