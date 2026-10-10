@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 __all__ = ["BoardPrediction", "BoardPredictor"]
 
-STATUS_ERROR_MESSAGES = {
+_STATUS_ERROR_MESSAGES = {
     Status.EMPTY: "Board is empty",
     Status.NO_WHITE_KING: "Missing white king",
     Status.NO_BLACK_KING: "Missing black king",
@@ -67,7 +67,7 @@ class BoardPrediction:
         if status is Status.VALID:
             return []
 
-        return [msg for flag, msg in STATUS_ERROR_MESSAGES.items() if status & flag]
+        return [msg for flag, msg in _STATUS_ERROR_MESSAGES.items() if status & flag]
 
     @property
     def ascii_board(self) -> str:
@@ -128,7 +128,7 @@ class BoardPredictor:
         if orientation is Orientation.AUTO:
             orientation = self._infer_orientation(predictions)
 
-        square_map = dict(zip(orientation.grid_coordinates, predictions))
+        square_map = dict(zip(orientation.grid_coordinates, predictions, strict=True))
 
         fen = self.fen(square_map=square_map, active_color=turn, castling=castling)
         logger.debug(
