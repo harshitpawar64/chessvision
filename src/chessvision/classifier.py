@@ -79,10 +79,7 @@ class PieceClassifier:
         ) / MODEL_NAME
         logger.debug("Checking model path: %s", model_path)
 
-        if (
-            model_path.exists()
-            and hashlib.sha256(model_path.read_bytes()).hexdigest() == MODEL_SHA256
-        ):
+        if model_path.exists() and _verify_checksum(model_path, MODEL_SHA256):
             logger.debug("Model found in cache and SHA-256 verified (%s)", model_path)
             return model_path
 
@@ -94,7 +91,7 @@ class PieceClassifier:
         try:
             urllib.request.urlretrieve(url, temp_path)
 
-            if hashlib.sha256(temp_path.read_bytes()).hexdigest() != MODEL_SHA256:
+            if not _verify_checksum(temp_path, MODEL_SHA256):
                 raise ValueError("Checksum mismatch")
 
             temp_path.replace(model_path)
@@ -123,3 +120,8 @@ class PieceClassifier:
         self, images: Sequence[Image.Image | Path | str | np.ndarray]
     ) -> np.ndarray:
         return np.stack([self._preprocess_single(img) for img in images], axis=0)
+
+
+def _verify_checksum(path: Path, expected_sha256: str) -> bool:
+    with path.open("rb") as f:
+        return hashlib.file_digest(f, "sha256").hexdigest() == expected_sha256
