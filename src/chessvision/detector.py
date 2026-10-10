@@ -34,7 +34,7 @@ _FULL_IMAGE_ASPECT_RATIO_MAX = 1.05
 class DetectedBoard:
     image: Image.Image
     box: tuple[int, int, int, int]
-    score: float = 0.0
+    score: float
 
 
 class BoardDetector:
@@ -106,7 +106,7 @@ class BoardDetector:
                     approx = cv2.approxPolyDP(hull, eps * peri, True)
                     if len(approx) == 4 and cv2.isContourConvex(approx):
                         pts = approx.reshape(4, 2).astype(np.float32)
-                        dewarped = self._dewarp_quad(arr, pts, BOARD_SIZE)
+                        dewarped = self._dewarp_quad(arr, pts)
                         if score := self._is_8x8_board(dewarped):
                             candidates.append(
                                 DetectedBoard(
@@ -190,9 +190,7 @@ class BoardDetector:
         return None
 
     @staticmethod
-    def _dewarp_quad(
-        img: np.ndarray, quad_pts: np.ndarray, target_size: int = BOARD_SIZE
-    ) -> np.ndarray:
+    def _dewarp_quad(img: np.ndarray, quad_pts: np.ndarray) -> np.ndarray:
         s = quad_pts.sum(axis=1)
         diff = np.diff(quad_pts, axis=1)
         src = np.array(
@@ -205,12 +203,12 @@ class BoardDetector:
             dtype=np.float32,
         )
         dst = np.array(
-            [[0, 0], [target_size, 0], [target_size, target_size], [0, target_size]],
+            [[0, 0], [BOARD_SIZE, 0], [BOARD_SIZE, BOARD_SIZE], [0, BOARD_SIZE]],
             dtype=np.float32,
         )
         matrix = cv2.getPerspectiveTransform(src, dst)
         return cv2.warpPerspective(
-            img, matrix, (target_size, target_size), flags=cv2.INTER_CUBIC
+            img, matrix, (BOARD_SIZE, BOARD_SIZE), flags=cv2.INTER_CUBIC
         )
 
     @staticmethod
