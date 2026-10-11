@@ -6,8 +6,8 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
+import cv2
 import numpy as np
-import onnxruntime as ort
 from PIL import Image
 from platformdirs import user_cache_path
 
@@ -37,16 +37,14 @@ class PieceClassifier:
         self.model_path = Path(model_path) if model_path else self.get_model_path()
         logger.debug("Initializing PieceClassifier with model: %s", self.model_path)
 
-        self.session = ort.InferenceSession(self.model_path)
-        self.input_name = self.session.get_inputs()[0].name
-        self.output_name = self.session.get_outputs()[0].name
+        self.net = cv2.dnn.readNetFromONNX(self.model_path)
 
     def predict_square(
         self, image: Image.Image | Path | str | np.ndarray
     ) -> SquarePrediction:
         tensor = np.expand_dims(self._preprocess_single(image), axis=0)
-        raw_output = self.session.run([self.output_name], {self.input_name: tensor})[0]
-        probs = np.asarray(raw_output, dtype=np.float32)[0]
+        self.net.setInput(tensor)
+        probs = np.asarray(self.net.forward(), dtype=np.float32)[0]
 
         prediction_index = np.argmax(probs)
 
@@ -61,8 +59,8 @@ class PieceClassifier:
             return []
         logger.debug("Predicting batch of %d square(s)", len(images))
         batch = self._preprocess_batch(images)
-        raw_output = self.session.run([self.output_name], {self.input_name: batch})[0]
-        probs = np.asarray(raw_output, dtype=np.float32)
+        self.net.setInput(batch)
+        probs = np.asarray(self.net.forward(), dtype=np.float32)
         prediction_indices = np.argmax(probs, axis=1)
 
         return [
