@@ -9,6 +9,6 @@ def to_pil_image(image: Image.Image | Path | str | np.ndarray) -> Image.Image:
         with Image.open(image) as img:
             return img.convert("RGB")
     if isinstance(image, np.ndarray):
-        return Image.fromarray(image).convert("RGB")
+        image = Image.fromarray(image)
 
-    return image.convert("RGB")
+    return image if image.mode == "RGB" else image.convert("RGB")
