@@ -42,15 +42,7 @@ class PieceClassifier:
     def predict_square(
         self, image: Image.Image | Path | str | np.ndarray
     ) -> SquarePrediction:
-        tensor = np.expand_dims(self._preprocess_single(image), axis=0)
-        self.net.setInput(tensor)
-        probs = np.asarray(self.net.forward(), dtype=np.float32)[0]
-
-        prediction_index = np.argmax(probs)
-
-        label = PIECE_CLASSES[prediction_index]
-
-        return SquarePrediction(label=label, confidence=float(probs[prediction_index]))
+        return self.predict_squares([image])[0]
 
     def predict_squares(
         self, images: Sequence[Image.Image | Path | str | np.ndarray]
@@ -60,7 +52,7 @@ class PieceClassifier:
         logger.debug("Predicting batch of %d square(s)", len(images))
         batch = self._preprocess_batch(images)
         self.net.setInput(batch)
-        probs = np.asarray(self.net.forward(), dtype=np.float32)
+        probs = self.net.forward()
         prediction_indices = np.argmax(probs, axis=1)
 
         return [
