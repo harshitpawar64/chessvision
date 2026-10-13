@@ -1,16 +1,27 @@
-# chessvision ♟️
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/harshitpawar64/chessvision/main/assets/logo-dark.png">
+    <img src="https://raw.githubusercontent.com/harshitpawar64/chessvision/main/assets/logo-light.png" width="420" alt="chessvision logo" />
+  </picture>
+</p>
 
-[![CI](https://github.com/harshitpawar64/chessvision/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/harshitpawar64/chessvision/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/github/harshitpawar64/chessvision/graph/badge.svg)](https://codecov.io/github/harshitpawar64/chessvision)
-[![Hugging Face](https://img.shields.io/badge/Hugging_Face-model-35c555.svg?logo=huggingface&labelColor=31373c)](https://huggingface.co/harshitpawar64/chessvision)
-[![python](https://img.shields.io/badge/Python-3.11+-35c555.svg?logo=python&labelColor=31373c&logoColor=skyblue)](https://www.python.org/)
+<p align="center">
+  <a href="https://github.com/harshitpawar64/chessvision/actions/workflows/ci.yml"><img src="https://github.com/harshitpawar64/chessvision/actions/workflows/ci.yml/badge.svg?event=push" alt="CI" /></a>
+  <a href="https://codecov.io/github/harshitpawar64/chessvision"><img src="https://codecov.io/github/harshitpawar64/chessvision/graph/badge.svg" alt="codecov" /></a>
+  <a href="https://huggingface.co/harshitpawar64/chessvision"><img src="https://img.shields.io/badge/Hugging_Face-model-35c555.svg?logo=huggingface&labelColor=31373c" alt="Hugging Face" /></a>
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.11+-35c555.svg?logo=python&labelColor=31373c&logoColor=skyblue" alt="python" /></a>
+</p>
 
-[![uv](https://img.shields.io/badge/uv-black.svg?logo=uv)](https://docs.astral.sh/uv/)
-[![ruff](https://img.shields.io/badge/ruff-black.svg?logo=ruff)](https://docs.astral.sh/ruff/)
-[![ty](https://img.shields.io/badge/ty-black.svg?logo=ty)](https://docs.astral.sh/ty/)
-[![pytest](https://img.shields.io/badge/pytest-black.svg?logo=pytest)](https://docs.pytest.org/)
+<p align="center">
+  <a href="https://docs.astral.sh/uv/"><img src="https://img.shields.io/badge/uv-black.svg?logo=uv" alt="uv" /></a>
+  <a href="https://docs.astral.sh/ruff/"><img src="https://img.shields.io/badge/ruff-black.svg?logo=ruff" alt="ruff" /></a>
+  <a href="https://docs.astral.sh/ty/"><img src="https://img.shields.io/badge/ty-black.svg?logo=ty" alt="ty" /></a>
+  <a href="https://docs.pytest.org/"><img src="https://img.shields.io/badge/pytest-black.svg?logo=pytest" alt="pytest" /></a>
+</p>
 
-A fast, lightweight chess board and piece recognition toolkit.
+<p align="center">
+  A fast, lightweight chess board and piece recognition toolkit.
+</p>
 
 ![chessvision demo](https://raw.githubusercontent.com/harshitpawar64/chessvision/main/assets/demo.png)
 
