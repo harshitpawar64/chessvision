@@ -3,7 +3,7 @@ name = "chessvision"
 version = "0.12.0"
 description = "Chess board recognition toolkit"
 readme = "README.md"
-license = "MIT"
+license = "GPL-3.0-only"
 authors = [{ name = "Harshit Pawar", email = "hpchess64@gmail.com" }]
 requires-python = ">=3.11"
 dependencies = [

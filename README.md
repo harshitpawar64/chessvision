@@ -210,4 +210,4 @@ Training assets were extracted, and preprocessed from [Lichess](https://github.c
 
 ## License
 
-This project is licensed under the [MIT License](https://github.com/harshitpawar64/chessvision/blob/main/LICENSE).
+This project is licensed under the [GNU GPL v3.0](https://github.com/harshitpawar64/chessvision/blob/main/LICENSE).
