@@ -1,0 +1,54 @@
+{
+  "manifest_version": 3,
+  "name": "chessvision",
+  "version": "0.1.0",
+  "description": "Scan & analyze chess positions from any website, document, and video.",
+  "author": "Harshit Pawar",
+  "homepage_url": "https://github.com/harshitpawar64/chessvision",
+  "icons": {
+    "128": "icon.png"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "declarativeNetRequestWithHostAccess"
+  ],
+  "host_permissions": [
+    "*://lichess.org/*"
+  ],
+  "action": {
+    "default_title": "chessvision",
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "@chessvision.harshitpawar",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "lichess_iframe",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  },
+  "cross_origin_opener_policy": {
+    "value": "same-origin"
+  },
+  "cross_origin_embedder_policy": {
+    "value": "require-corp"
+  }
+}
