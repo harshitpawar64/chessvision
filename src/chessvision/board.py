@@ -76,7 +76,7 @@ class BoardPrediction:
 
         for rank in self.orientation.ranks:
             row_symbols = [
-                PIECES.get(self.squares[f"{file}{rank}"].label, ".")
+                PIECES[self.squares[f"{file}{rank}"].label]
                 for file in self.orientation.files
             ]
 
@@ -89,7 +89,7 @@ class BoardPrediction:
     @property
     def chesscom_url(self) -> str:
         fen_slug = self.fen.replace("/", "%2F").replace(" ", "+")
-        flip = "&flip=true" if self.orientation == Orientation.BLACK else ""
+        flip = "&flip=true" if self.orientation is Orientation.BLACK else ""
         return f"https://www.chess.com/analysis?fen={fen_slug}{flip}"
 
     @property
@@ -218,7 +218,7 @@ class BoardPredictor:
             if square_map["a8"].label == "bR":
                 castling_rights += "q"
 
-        rights = castling_rights if castling_rights else "-"
+        rights = castling_rights or "-"
         logger.debug("Inferred castling rights: %s", rights)
         return rights
 

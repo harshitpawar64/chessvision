@@ -85,7 +85,7 @@ class BoardDetector:
 
             hull = cv2.convexHull(contour)
             hull_area = cv2.contourArea(hull)
-            fill_ratio = hull_area / (bw * bh + 1e-5)
+            fill_ratio = hull_area / (bw * bh)
 
             if fill_ratio >= _FILL_RATIO_THRESHOLD:
                 sub_gray = gray[by : by + bh, bx : bx + bw]

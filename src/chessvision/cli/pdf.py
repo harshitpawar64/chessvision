@@ -49,7 +49,7 @@ def pdf(
                 typer.secho(header.center(21), bold=True)
 
                 print(result.prediction.ascii_board + "\n")
-                print(f"FEN: {result.prediction.fen}")
+                print(f"FEN: {result.prediction}")
                 print(f"Confidence: {result.prediction.confidence:.2%}")
 
             if errors := result.prediction.validation_errors:

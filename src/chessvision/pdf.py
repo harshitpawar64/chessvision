@@ -58,8 +58,6 @@ class PDFPredictor:
                     scale,
                     len(boards),
                 )
-                if not boards:
-                    continue
 
                 for i, detected_board in enumerate(boards, 1):
                     prediction = self.predictor.predict(detected_board)

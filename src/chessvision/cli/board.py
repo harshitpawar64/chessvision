@@ -103,9 +103,12 @@ def board(
         if len(boards) > 1 and i < len(boards):
             print()
 
-        url = prediction.chesscom_url if site == "chess.com" else prediction.lichess_url
-
         if open_in_browser:
+            url = (
+                prediction.chesscom_url
+                if site == "chess.com"
+                else prediction.lichess_url
+            )
             typer.launch(url)
 
     report_validation_errors(invalid_boards, total_boards=len(boards))
