@@ -1,15 +1,36 @@
 {
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
-  "release-type": "python",
-  "include-component-in-tag": false,
+  "separate-pull-requests": true,
   "packages": {
     ".": {
+      "release-type": "python",
+      "include-component-in-tag": false,
+      "exclude-paths": ["extension"],
       "extra-files": [
         "src/chessvision/__init__.py",
         {
           "type": "toml",
           "path": "uv.lock",
           "jsonpath": "$.package[?(@.name.value=='chessvision')].version"
+        }
+      ],
+      "changelog-sections": [
+        { "type": "feat", "section": "Features" },
+        { "type": "fix", "section": "Bug Fixes" },
+        { "type": "perf", "section": "Performance Improvements" },
+        { "type": "refactor", "section": "Refactor" },
+        { "type": "docs", "section": "Documentation" }
+      ]
+    },
+    "extension": {
+      "component": "extension",
+      "release-type": "simple",
+      "skip-github-release": true,
+      "extra-files": [
+        {
+          "type": "json",
+          "path": "manifest.json",
+          "jsonpath": "$.version"
         }
       ],
       "changelog-sections": [
