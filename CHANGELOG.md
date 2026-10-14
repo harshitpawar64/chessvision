@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.12.1](https://github.com/harshitpawar64/chessvision/compare/v0.12.0...v0.12.1) (2026-10-14)
+
+
+### Performance Improvements
+
+* **utils:** skip redundant RGB conversion in `to_pil_image` ([2c2e594](https://github.com/harshitpawar64/chessvision/commit/2c2e5946973a122d58ddcc6a2bf770327c02668e))
+
+
+### Refactor
+
+* **classifier:** delegate single-square prediction to `predict_squares` ([e4989ac](https://github.com/harshitpawar64/chessvision/commit/e4989acc9321cdc8855b4d9e1a976977a68047b6))
+* **classifier:** replace `onnxruntime` with `cv2.dnn` for model inference ([01cfe32](https://github.com/harshitpawar64/chessvision/commit/01cfe324791f19f030f3580e8e4a5b142fb6434c))
+* clean up redundant guards, URL resolution, and piece lookup ([afedcf3](https://github.com/harshitpawar64/chessvision/commit/afedcf3b2296cb9db1829be6562b9dbf312fbde2))
+
+
+### Documentation
+
+* **readme:** add project banners and center badges ([962f760](https://github.com/harshitpawar64/chessvision/commit/962f7605f0c4f20aba56c6762d3209588d04126c))
+
 ## [0.12.0](https://github.com/harshitpawar64/chessvision/compare/v0.11.0...v0.12.0) (2026-10-10)
 
 
