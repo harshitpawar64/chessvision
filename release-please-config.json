@@ -4,6 +4,7 @@
   "include-component-in-tag": false,
   "packages": {
     ".": {
+      "exclude-paths": ["extension"],
       "extra-files": [
         "src/chessvision/__init__.py",
         {
