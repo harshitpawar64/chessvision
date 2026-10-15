@@ -15,39 +15,71 @@ permissions:
   contents: read
 
 jobs:
-  ci:
-    name: CI
+  lint:
+    name: Lint & Format
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v7.0.1
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v10.2.0
+        uses: astral-sh/setup-uv@v10.3.0
         with:
           version: "latest-known"
-          activate-environment: true
-
-      - name: Install dependencies
-        run: uv sync --locked
 
       - name: Lint
-        run: ruff check
+        run: uv run ruff check
 
       - name: Format check
-        if: always()
-        run: ruff format --check
+        run: uv run ruff format --check
+
+  type-check:
+    name: Type Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v10.3.0
+        with:
+          version: "latest-known"
 
       - name: Type check
-        if: always()
-        run: ty check src/chessvision
+        run: uv run ty check src/chessvision
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v10.3.0
+        with:
+          version: "latest-known"
 
       - name: Run tests
-        if: always()
-        run: pytest tests/
+        run: uv run pytest tests/
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+
+  ci:
+    name: CI
+    needs: [lint, type-check, test]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify all checks passed
+        run: |
+          if [ "${{ needs.lint.result }}" != "success" ] || \
+             [ "${{ needs.type-check.result }}" != "success" ] || \
+             [ "${{ needs.test.result }}" != "success" ]; then
+            echo "One or more required CI checks failed."
+            exit 1
+          fi
+          echo "All CI checks completed successfully!"
