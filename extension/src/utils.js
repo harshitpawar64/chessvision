@@ -133,4 +133,3 @@ function isCheck(pieces, color) {
 
   return false;
 }
-
