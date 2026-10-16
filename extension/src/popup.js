@@ -47,4 +47,3 @@ if (pendingCapture) {
 } else if (lastLichessUrl) {
   showBoard(lastLichessUrl);
 }
-

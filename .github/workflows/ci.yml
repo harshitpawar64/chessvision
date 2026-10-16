@@ -46,7 +46,7 @@ jobs:
           version: "latest-known"
 
       - name: Type check
-        run: uv run ty check src/chessvision
+        run: uv run ty check
 
   test:
     name: Test
@@ -61,7 +61,7 @@ jobs:
           version: "latest-known"
 
       - name: Run tests
-        run: uv run pytest tests/
+        run: uv run pytest
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v7
