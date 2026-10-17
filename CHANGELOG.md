@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.13.0](https://github.com/harshitpawar64/chessvision/compare/v0.12.1...v0.13.0) (2026-10-17)
+
+
+### Features
+
+* **cli:** disable shell completion and show help by default ([c5a8958](https://github.com/harshitpawar64/chessvision/commit/c5a89582fdbe1117851029bfabfe6302163fa3a8))
+* **train:** add chess.com assets and parallelize piece dataset generation ([233ee98](https://github.com/harshitpawar64/chessvision/commit/233ee980a93625aa25936049a4d16b0826bef6f6))
+
+
+### Refactor
+
+* extract model downloading and caching into `_utils` ([548c618](https://github.com/harshitpawar64/chessvision/commit/548c618fe112e0beefe5700df90f52a206a3be15))
+
+
+### Documentation
+
+* **readme:** add browser extension guide and update CLI tables ([0a28045](https://github.com/harshitpawar64/chessvision/commit/0a280452d6ec8652a290688a340fd32e771b3673))
+* **readme:** add chess.com asset attributions ([84d5e9d](https://github.com/harshitpawar64/chessvision/commit/84d5e9dcf3d1c0b1dec4083c48c261cfdb8c0567))
+
 ## [0.12.1](https://github.com/harshitpawar64/chessvision/compare/v0.12.0...v0.12.1) (2026-10-14)
 
 
