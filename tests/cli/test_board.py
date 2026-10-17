@@ -8,7 +8,7 @@ from chessvision.cli import app
 
 
 def test_board(runner: CliRunner) -> None:
-    result = runner.invoke(app, ["board", "assets/chessboard.png"])
+    result = runner.invoke(app, ["board", "tests/assets/chessboard.png"])
     assert result.exit_code == 0
     assert "FEN:" in result.stdout
     assert "2b1k2r/pp2P3/2p3RQ/8/5P2/7P/Pq1r2PK/4R3 w k - 0 1" in result.stdout
@@ -16,18 +16,20 @@ def test_board(runner: CliRunner) -> None:
 
 
 def test_board_castling_valid(runner: CliRunner) -> None:
-    result = runner.invoke(app, ["board", "assets/chessboard.png", "-c", "qK"])
+    result = runner.invoke(app, ["board", "tests/assets/chessboard.png", "-c", "qK"])
     assert result.exit_code == 0
     assert "2b1k2r/pp2P3/2p3RQ/8/5P2/7P/Pq1r2PK/4R3 w Kq - 0 1" in result.stdout
 
 
 def test_board_castling_invalid(runner: CliRunner) -> None:
-    result = runner.invoke(app, ["board", "assets/chessboard.png", "-c", "invalid"])
+    result = runner.invoke(
+        app, ["board", "tests/assets/chessboard.png", "-c", "invalid"]
+    )
     assert result.exit_code == 2
 
 
 def test_board_no_board_detected(runner: CliRunner) -> None:
-    result = runner.invoke(app, ["board", "assets/square.png"])
+    result = runner.invoke(app, ["board", "tests/assets/square.png"])
     assert result.exit_code == 1
     assert "No chessboard detected in the image." in result.stderr
 
@@ -50,7 +52,7 @@ def test_board_illegal_warning(
         lambda *args, **kwargs: mock_prediction,
     )
 
-    result = runner.invoke(app, ["board", "assets/chessboard.png"])
+    result = runner.invoke(app, ["board", "tests/assets/chessboard.png"])
     assert result.exit_code == 0
     assert (
         "Illegal position detected: Missing white king, Missing black king, Board is empty."
@@ -75,14 +77,17 @@ def test_board_multiple_boards_illegal(
     )
     monkeypatch.setattr(
         "chessvision.cli.board.BoardDetector.detect",
-        lambda *args, **kwargs: ["assets/chessboard.png", "assets/chessboard.png"],
+        lambda *args, **kwargs: [
+            "tests/assets/chessboard.png",
+            "tests/assets/chessboard.png",
+        ],
     )
     monkeypatch.setattr(
         "chessvision.cli.board.BoardPredictor.predict",
         MagicMock(side_effect=[mock_prediction_valid, mock_prediction_invalid]),
     )
 
-    result = runner.invoke(app, ["board", "assets/chessboard.png"])
+    result = runner.invoke(app, ["board", "tests/assets/chessboard.png"])
     assert result.exit_code == 0
     assert "Illegal position detected:" in result.stderr
     assert "- Board #2: Board is empty" in result.stderr
@@ -93,10 +98,13 @@ def test_board_multiple_boards(
 ) -> None:
     monkeypatch.setattr(
         "chessvision.cli.board.BoardDetector.detect",
-        lambda *args, **kwargs: ["assets/chessboard.png", "assets/chessboard.png"],
+        lambda *args, **kwargs: [
+            "tests/assets/chessboard.png",
+            "tests/assets/chessboard.png",
+        ],
     )
 
-    result = runner.invoke(app, ["board", "assets/chessboard.png"])
+    result = runner.invoke(app, ["board", "tests/assets/chessboard.png"])
     assert result.exit_code == 0
     assert "Board #1" in result.stdout
     assert "Board #2" in result.stdout
@@ -108,7 +116,7 @@ def test_board_open_in_browser(
     mock_launch = MagicMock()
     monkeypatch.setattr("chessvision.cli.board.typer.launch", mock_launch)
 
-    result = runner.invoke(app, ["board", "assets/chessboard.png", "--open"])
+    result = runner.invoke(app, ["board", "tests/assets/chessboard.png", "--open"])
     assert result.exit_code == 0
     mock_launch.assert_called_once()
 
@@ -116,7 +124,7 @@ def test_board_open_in_browser(
 def test_board_clipboard_image(
     runner: CliRunner, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    img = Image.open("assets/chessboard.png")
+    img = Image.open("tests/assets/chessboard.png")
     monkeypatch.setattr("chessvision.cli.board.ImageGrab.grabclipboard", lambda: img)
 
     result = runner.invoke(app, ["board"])
@@ -129,7 +137,7 @@ def test_board_clipboard_list(
 ) -> None:
     monkeypatch.setattr(
         "chessvision.cli.board.ImageGrab.grabclipboard",
-        lambda: ["assets/chessboard.png"],
+        lambda: ["tests/assets/chessboard.png"],
     )
 
     result = runner.invoke(app, ["board"])
