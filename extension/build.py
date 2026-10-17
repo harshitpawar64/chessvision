@@ -2,6 +2,8 @@ import json
 import zipfile
 from pathlib import Path
 
+from chessvision._utils import download_model
+
 ROOT = Path(__file__).resolve().parent
 DIST = ROOT.parent / "dist"
 
@@ -10,6 +12,7 @@ EXCLUDED_PARTS = {"_metadata", "build.py"}
 
 def build() -> None:
     DIST.mkdir(exist_ok=True)
+    download_model(ROOT)
 
     manifest_raw = json.loads((ROOT / "manifest.json").read_text(encoding="utf-8"))
     version = manifest_raw["version"]
