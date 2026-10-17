@@ -250,7 +250,9 @@ chessvision square square.png
 
 ## Attributions
 
-Training assets were extracted, and preprocessed from [Lichess](https://github.com/lichess-org/lila) open-source piece sets and board themes (see their [COPYING.md](https://github.com/lichess-org/lila/blob/master/COPYING.md) for individual asset licenses).
+Training assets were extracted and preprocessed from:
+- [Lichess](https://github.com/lichess-org/lila) open-source piece sets and board themes (see their [COPYING.md](https://github.com/lichess-org/lila/blob/master/COPYING.md) for individual asset licenses).
+- [Chess.com](https://www.chess.com) piece sets and board themes (all rights reserved by Chess.com, LLC).
 
 ---
 
