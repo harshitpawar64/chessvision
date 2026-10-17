@@ -9,3 +9,7 @@ def test_unknown_attribute_raises_attribute_error() -> None:
         match="module 'chessvision' has no attribute 'non_existent_attribute'",
     ):
         _ = chessvision.non_existent_attribute
+
+
+def test_dir() -> None:
+    assert dir(chessvision) == sorted(chessvision.__all__)

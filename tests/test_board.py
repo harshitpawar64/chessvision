@@ -117,7 +117,7 @@ def test_board_predictor_auto_castling(
 
 def test_board_predictor_explicit_orientation() -> None:
     prediction = predictor.predict(
-        "assets/chessboard.png", orientation=Orientation.WHITE
+        "tests/assets/chessboard.png", orientation=Orientation.WHITE
     )
     assert prediction.orientation is Orientation.WHITE
 
@@ -134,7 +134,7 @@ def test_board_predictor_auto_orientation_black(
         PieceClassifier, "predict_squares", lambda *args, **kwargs: mock_predictions
     )
 
-    prediction = predictor.predict("assets/chessboard.png")
+    prediction = predictor.predict("tests/assets/chessboard.png")
     assert prediction.orientation is Orientation.BLACK
 
 
@@ -148,12 +148,12 @@ def test_board_predictor_auto_orientation_empty(
         PieceClassifier, "predict_squares", lambda *args, **kwargs: mock_predictions
     )
 
-    prediction = predictor.predict("assets/chessboard.png")
+    prediction = predictor.predict("tests/assets/chessboard.png")
     assert prediction.orientation is Orientation.WHITE
 
 
 def test_board_predictor_explicit_turn() -> None:
-    prediction = predictor.predict("assets/chessboard.png", turn=Turn.BLACK)
+    prediction = predictor.predict("tests/assets/chessboard.png", turn=Turn.BLACK)
     assert " b " in prediction.fen
 
 
@@ -170,7 +170,7 @@ def test_board_predictor_auto_turn_white_under_check(
         PieceClassifier, "predict_squares", lambda *args, **kwargs: mock_predictions
     )
 
-    prediction = predictor.predict("assets/chessboard.png")
+    prediction = predictor.predict("tests/assets/chessboard.png")
     assert " w " in prediction.fen
 
 
@@ -186,5 +186,5 @@ def test_board_predictor_auto_turn_black_under_check(
     monkeypatch.setattr(
         PieceClassifier, "predict_squares", lambda *args, **kwargs: mock_predictions
     )
-    prediction = predictor.predict("assets/chessboard.png")
+    prediction = predictor.predict("tests/assets/chessboard.png")
     assert " b " in prediction.fen
