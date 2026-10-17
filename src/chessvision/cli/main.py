@@ -7,7 +7,7 @@ from chessvision.cli.board import board
 from chessvision.cli.pdf import pdf
 from chessvision.cli.square import square
 
-app = typer.Typer()
+app = typer.Typer(add_completion=False, no_args_is_help=True)
 
 app.command()(square)
 app.command()(board)
