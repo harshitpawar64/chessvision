@@ -47,6 +47,43 @@ pip install chessvision
 
 ---
 
+## Browser Extension
+
+| Browser | Install from |
+|:-------:|--------------|
+| ![Firefox](https://github.com/user-attachments/assets/c5570f80-349e-4945-9062-ade9e855433d) | [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/chessvision/) |
+| ![Chrome](https://github.com/user-attachments/assets/d506ce00-232c-475c-b160-250afcdbefb5) | [Build from source](#build-from-source) |
+| ![Edge](https://github.com/user-attachments/assets/74d111dc-abfc-4c86-873e-22c6eb8093a9) | [Build from source](#build-from-source) |
+
+<details id="build-from-source">
+<summary><b>Build from source</b></summary>
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/harshitpawar64/chessvision.git
+   cd chessvision
+   ```
+2. Download the model and build the extension bundles:
+   ```bash
+   uv run python extension/build.py
+   ```
+
+#### Chromium (Chrome, Edge, Brave, etc.)
+
+1. Open your browser's extensions page (ex: `chrome://extensions`).
+2. Toggle on **Developer mode** in the top-right corner.
+3. Click **Load unpacked** and select the `extension/` directory.
+
+#### Firefox
+
+1. Open `about:debugging#/runtime/this-firefox`.
+2. Click **Load Temporary Add-on...**.
+3. Select the `dist/chessvision-firefox-v*.zip` file.
+
+</details>
+
+---
+
 ## Usage
 
 ### CLI
@@ -125,21 +162,25 @@ for prediction in batch_predictions:
 
 ### `chessvision board`
 
-| **Flag**        | **Short** | **Default** | **Description**                                                    |
-|-----------------|:---------:|:-----------:|--------------------------------------------------------------------|
-| `--orientation` |    `-o`   |    `auto`   | Board perspective (`auto`, `white`, or `black`).                   |
-| `--turn`        |    `-t`   |    `auto`   | Side to move (`auto`, `white` or `black`).                         |
-| `--castling`    |    `-c`   |    `auto`   | Castling availability (see [castling options](#castling-options)). |
-| `--open`        |           |   `False`   | Open position directly in analysis board.                          |
-| `--site`        |    `-s`   |  `lichess`  | Analysis platform (`chess.com` or `lichess`).                      |
+| **Flag**        | **Short** | **Default** | **Description**                                  |
+|-----------------|:---------:|:-----------:|--------------------------------------------------|
+| `--orientation` |    `-o`   |    `auto`   | Board perspective (`auto`, `white`, or `black`). |
+| `--turn`        |    `-t`   |    `auto`   | Side to move (`auto`, `white` or `black`).       |
+| `--castling`    |    `-c`   |    `auto`   | Castling availability (see options below).       |
+| `--open`        |           |   `False`   | Open position directly in analysis board.        |
+| `--site`        |    `-s`   |  `lichess`  | Analysis platform (`chess.com` or `lichess`).    |
+| `--verbose`     |    `-v`   |   `False`   | Enable verbose logging.                          |
 
-#### Castling Options
+<details>
+<summary><b>Castling Options</b></summary>
 
 | **Value** | **Description**                              |
 |:---------:|----------------------------------------------|
 |   `auto`  | Automatically infer castling (default)       |
 |    `-`    | No castling for both sides                   |
 |  `[KQkq]` | Specific castling rights (e.g. KQkq, KQ, Qk) |
+
+</details>
 
 ```bash
 # Predict from clipboard (screenshot or copied image)
@@ -164,9 +205,10 @@ chessvision board chessboard.png --open -s lichess
 
 ### `chessvision pdf`
 
-| **Flag**   | **Short** | **Default** | **Description**          |
-|------------|:---------:|:-----------:|--------------------------|
-| `--output` |    `-o`   |    `None`   | Path to output PGN file. |
+| **Flag**    | **Short** | **Default** | **Description**          |
+|-------------|:---------:|:-----------:|--------------------------|
+| `--output`  |    `-o`   |    `None`   | Path to output PGN file. |
+| `--verbose` |    `-v`   |   `False`   | Enable verbose logging.  |
 
 ```bash
 # Predict chess positions from a PDF document
@@ -178,6 +220,10 @@ chessvision pdf document.pdf -o positions.pgn
 ```
 
 ### `chessvision square`
+
+| **Flag**    | **Short** | **Default** | **Description**         |
+|-------------|:---------:|:-----------:|-------------------------|
+| `--verbose` |    `-v`   |   `False`   | Enable verbose logging. |
 
 ```bash
 # Predict piece on a square image
