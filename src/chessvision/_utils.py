@@ -1,7 +1,11 @@
+import logging
+from importlib.resources import files
 from pathlib import Path
 
 import numpy as np
 from PIL import Image
+
+logger = logging.getLogger(__name__)
 
 
 def to_pil_image(image: Image.Image | Path | str | np.ndarray) -> Image.Image:
@@ -12,3 +16,13 @@ def to_pil_image(image: Image.Image | Path | str | np.ndarray) -> Image.Image:
         image = Image.fromarray(image)
 
     return image if image.mode == "RGB" else image.convert("RGB")
+
+
+def get_model_path() -> Path:
+    resource = files("chessvision.models") / "chess_piece_classifier.onnx"
+    if isinstance(resource, Path) and resource.is_file():
+        return resource
+
+    raise FileNotFoundError(
+        f"Bundled piece classifier model was not found at {resource}."
+    )

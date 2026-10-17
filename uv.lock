@@ -213,7 +213,6 @@ dependencies = [
     { name = "numpy", version = "2.5.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
     { name = "opencv-python-headless" },
     { name = "pillow" },
-    { name = "platformdirs" },
     { name = "pypdfium2" },
     { name = "typer" },
 ]
@@ -236,7 +235,6 @@ requires-dist = [
     { name = "numpy", specifier = ">=2.4.6" },
     { name = "opencv-python-headless", specifier = ">=5.0.0.93" },
     { name = "pillow", specifier = ">=12.3.0" },
-    { name = "platformdirs", specifier = ">=4.11.4" },
     { name = "pypdfium2", specifier = ">=5.13.0" },
     { name = "typer", specifier = ">=0.27.1" },
 ]
