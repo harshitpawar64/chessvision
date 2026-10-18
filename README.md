@@ -8,7 +8,6 @@
 <p align="center">
   <a href="https://github.com/harshitpawar64/chessvision/actions/workflows/ci.yml"><img src="https://github.com/harshitpawar64/chessvision/actions/workflows/ci.yml/badge.svg?event=push" alt="CI" /></a>
   <a href="https://codecov.io/github/harshitpawar64/chessvision"><img src="https://codecov.io/github/harshitpawar64/chessvision/graph/badge.svg" alt="codecov" /></a>
-  <a href="https://huggingface.co/harshitpawar64/chessvision"><img src="https://img.shields.io/badge/Hugging_Face-model-35c555.svg?logo=huggingface&labelColor=31373c" alt="Hugging Face" /></a>
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.11+-35c555.svg?logo=python&labelColor=31373c&logoColor=skyblue" alt="python" /></a>
 </p>
 
@@ -63,7 +62,7 @@ pip install chessvision
    git clone https://github.com/harshitpawar64/chessvision.git
    cd chessvision
    ```
-2. Download the model and build the extension bundles:
+2. Build the browser extension bundles:
    ```bash
    uv run python extension/build.py
    ```
@@ -232,19 +231,6 @@ chessvision square square.png
 
 ![square prediction demo](https://raw.githubusercontent.com/harshitpawar64/chessvision/main/assets/square_demo.png)
 
----
-
-## Model & Cache Management
-
-`chessvision` automatically downloads the pre-trained ONNX piece classifier (`chess_piece_classifier.onnx`) from [Hugging Face](https://huggingface.co/harshitpawar64/chessvision) on its first run and caches it locally:
-
-### Default File Paths
-
-| **OS**  | **Cache Path**                                                 |
-|---------|----------------------------------------------------------------|
-| Linux   | `~/.cache/chessvision/chess_piece_classifier.onnx`             |
-| macOS   | `~/Library/Caches/chessvision/chess_piece_classifier.onnx`     |
-| Windows | `%LOCALAPPDATA%\chessvision\Cache\chess_piece_classifier.onnx` |
 
 ---
 
