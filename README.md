@@ -50,9 +50,9 @@ pip install chessvision
 
 | Browser | Install from |
 |:-------:|--------------|
-| ![Firefox](https://github.com/user-attachments/assets/c5570f80-349e-4945-9062-ade9e855433d) | [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/chessvision/) |
-| ![Chrome](https://github.com/user-attachments/assets/d506ce00-232c-475c-b160-250afcdbefb5) | [Build from source](#build-from-source) |
-| ![Edge](https://github.com/user-attachments/assets/74d111dc-abfc-4c86-873e-22c6eb8093a9) | [Build from source](#build-from-source) |
+| ![Firefox](https://raw.githubusercontent.com/alrra/browser-logos/refs/heads/main/src/firefox/firefox_48x48.png) | [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/chessvision/) |
+| ![Chrome](https://raw.githubusercontent.com/alrra/browser-logos/refs/heads/main/src/chrome/chrome_48x48.png) | [Build from source](#build-from-source) |
+| ![Edge](https://raw.githubusercontent.com/alrra/browser-logos/refs/heads/main/src/edge/edge_48x48.png) | [Build from source](#build-from-source) |
 
 <details id="build-from-source">
 <summary><b>Build from source</b></summary>
