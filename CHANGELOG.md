@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.13.0](https://github.com/harshitpawar64/chessvision/compare/v0.12.1...v0.13.0) (2026-10-18)
+
+
+### Features
+
+* **cli:** disable shell completion and show help by default ([8c6e03b](https://github.com/harshitpawar64/chessvision/commit/8c6e03b8c6d2e41988cbbc82cec9a56250016598))
+* **model:** bundle piece classifier model inside package wheel ([996aa22](https://github.com/harshitpawar64/chessvision/commit/996aa227a55b00ef6b0f60631b825912006955d3))
+* **train:** add chess.com assets and parallelize piece dataset generation ([2d1a9a7](https://github.com/harshitpawar64/chessvision/commit/2d1a9a7ecd3c4f87bade2ce67304de7e8109da5f))
+
+
+### Documentation
+
+* **readme:** add browser extension guide and update CLI tables ([dc87830](https://github.com/harshitpawar64/chessvision/commit/dc87830c2e53e078bca5c33d560fa7e58ac764b7))
+* **readme:** add chess.com asset attributions ([28f4228](https://github.com/harshitpawar64/chessvision/commit/28f42281bf34de40205fa771dfdf30a23fc58ef1))
+* **readme:** remove obsolete model cache section and huggingface badge ([226ccda](https://github.com/harshitpawar64/chessvision/commit/226ccdacd6bd6499584975f5cd507157e665d48e))
+
 ## [0.12.1](https://github.com/harshitpawar64/chessvision/compare/v0.12.0...v0.12.1) (2026-10-14)
 
 
