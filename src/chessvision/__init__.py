@@ -53,4 +53,6 @@ def __getattr__(name: str) -> Any:
 
 
 def __dir__() -> list[str]:
-    return sorted(__all__)
+    return sorted(
+        set(__all__) | {k for k in globals() if k.startswith("__") and k.endswith("__")}
+    )

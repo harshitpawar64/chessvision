@@ -12,4 +12,7 @@ def test_unknown_attribute_raises_attribute_error() -> None:
 
 
 def test_dir() -> None:
-    assert dir(chessvision) == sorted(chessvision.__all__)
+    dir_attrs = set(dir(chessvision))
+
+    assert set(chessvision.__all__) < dir_attrs
+    assert {"__all__", "__file__", "__name__"} < dir_attrs
