@@ -2,6 +2,7 @@ import logging
 import re
 from dataclasses import dataclass
 from pathlib import Path
+from statistics import fmean
 
 import chess
 import chess.pgn
@@ -123,9 +124,7 @@ class BoardPredictor:
         logger.debug("Board sliced into %d squares", len(square_images))
         predictions = self.classifier.predict_squares(square_images)
 
-        avg_confidence = float(
-            np.mean([prediction.confidence for prediction in predictions])
-        )
+        avg_confidence = fmean(prediction.confidence for prediction in predictions)
 
         if orientation is Orientation.AUTO:
             orientation = self._infer_orientation(predictions)
@@ -189,11 +188,12 @@ class BoardPredictor:
             )
             return Orientation.WHITE
 
-        white_mean = np.mean(white_rows)
-        black_mean = np.mean(black_rows)
+        white_mean = fmean(white_rows)
+        black_mean = fmean(black_rows)
         orientation = (
             Orientation.WHITE if white_mean > black_mean else Orientation.BLACK
         )
+
         logger.debug(
             "Inferred orientation %s (white_rows_avg=%.2f, black_rows_avg=%.2f)",
             orientation,
@@ -267,12 +267,10 @@ def _slice_board(
     square_w = width / 8
     square_h = height / 8
 
-    square_images = [
+    return [
         img.crop(
             (col * square_w, row * square_h, (col + 1) * square_w, (row + 1) * square_h)
         )
         for row in range(8)
         for col in range(8)
     ]
-
-    return square_images
