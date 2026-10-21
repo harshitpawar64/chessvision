@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.13.1](https://github.com/harshitpawar64/chessvision/compare/v0.13.0...v0.13.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* **init:** preserve module dunder attributes in `__dir__` ([e84a1ce](https://github.com/harshitpawar64/chessvision/commit/e84a1ce00e74a95db4e281c84ccc9e7a2b7e99a1))
+
+
+### Refactor
+
+* **board:** replace `np.mean` with `statistics.fmean` ([9d49245](https://github.com/harshitpawar64/chessvision/commit/9d49245ef1c566838f1dcf3a5402cc46cf75b16b))
+* **classifier:** simplify and vectorize square preprocessing ([e4fbe47](https://github.com/harshitpawar64/chessvision/commit/e4fbe476bb4a6befa8266291c6f168ca1be01ff9))
+* **detector:** extract constants and add early size validation ([f607672](https://github.com/harshitpawar64/chessvision/commit/f607672a074668c51a166120a0389e5b72d1868b))
+
+
+### Documentation
+
+* **readme:** update browser logo URLs ([12923e6](https://github.com/harshitpawar64/chessvision/commit/12923e6c5cd7c476aa97571e5aedd62a13c7f4b6))
+
 ## [0.13.0](https://github.com/harshitpawar64/chessvision/compare/v0.12.1...v0.13.0) (2026-10-18)
 
 
