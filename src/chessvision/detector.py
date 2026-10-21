@@ -13,6 +13,9 @@ logger = logging.getLogger(__name__)
 
 __all__ = ["BoardDetector", "DetectedBoard"]
 
+_MIN_BOARD_SIZE = 64
+_MIN_BOARD_DIMS = (_MIN_BOARD_SIZE, _MIN_BOARD_SIZE)
+
 _KERNEL_3X3 = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
 _CHECKERBOARD_MASK = (np.arange(8)[:, None] + np.arange(8)) % 2 == 0
 _GRID_INDICES = np.arange(7, 63, 8)
@@ -21,6 +24,7 @@ _MID_INDICES = np.arange(3, 63, 8)
 _ASPECT_RATIO_MIN = 0.75
 _ASPECT_RATIO_MAX = 1.35
 _FILL_RATIO_THRESHOLD = 0.95
+_FILL_RATIO_SKEWED_MIN = 0.5
 _POLYGON_EPSILONS = (0.015, 0.02, 0.03)
 _NMS_THRESHOLD = 0.3
 _MARGIN_RATIO = 0.15
@@ -28,6 +32,18 @@ _DARK_PIXEL_THRESHOLD = 120
 _LINE_DENSITY_THRESHOLD = 0.45
 _FULL_IMAGE_ASPECT_RATIO_MIN = 0.95
 _FULL_IMAGE_ASPECT_RATIO_MAX = 1.05
+
+_CONTRAST_THRESHOLD_LOW = 20.0
+_CONTRAST_THRESHOLD_HIGH = 40.0
+_GRID_RATIO_MIN = 1.3
+_CANNY_THRESHOLD1 = 40
+_CANNY_THRESHOLD2 = 150
+_GAUSSIAN_BLUR_KSIZE = (5, 5)
+
+_DESTINATION_BOARD_QUAD = np.array(
+    [[0, 0], [BOARD_SIZE, 0], [BOARD_SIZE, BOARD_SIZE], [0, BOARD_SIZE]],
+    dtype=np.float32,
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -48,6 +64,15 @@ class BoardDetector:
         self, image: Image.Image | Path | str | np.ndarray
     ) -> list[DetectedBoard]:
         img = to_pil_image(image)
+
+        if min(img.size) < _MIN_BOARD_SIZE:
+            logger.debug(
+                "Image dimensions (%dx%d) are smaller than minimum board size (%dx%d); skipping detection",
+                *img.size,
+                *_MIN_BOARD_DIMS,
+            )
+            return []
+
         arr = np.asarray(img)
         gray = cv2.cvtColor(arr, cv2.COLOR_RGB2GRAY)
 
@@ -67,8 +92,8 @@ class BoardDetector:
             binary, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE
         )
 
-        blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-        edges = cv2.Canny(blurred, 40, 150)
+        blurred = cv2.GaussianBlur(gray, _GAUSSIAN_BLUR_KSIZE, 0)
+        edges = cv2.Canny(blurred, _CANNY_THRESHOLD1, _CANNY_THRESHOLD2)
         dilated = cv2.dilate(edges, _KERNEL_3X3, iterations=2)
         contours_canny, _ = cv2.findContours(
             dilated, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE
@@ -100,7 +125,7 @@ class BoardDetector:
                             score=score,
                         )
                     )
-            elif fill_ratio >= 0.5:
+            elif fill_ratio >= _FILL_RATIO_SKEWED_MIN:
                 peri = cv2.arcLength(hull, True)
                 for eps in _POLYGON_EPSILONS:
                     approx = cv2.approxPolyDP(hull, eps * peri, True)
@@ -147,13 +172,13 @@ class BoardDetector:
 
     @staticmethod
     def _is_8x8_board(crop: np.ndarray) -> float | None:
-        if min(crop.shape[:2]) < 64:
+        if min(crop.shape[:2]) < _MIN_BOARD_SIZE:
             return None
 
         if crop.ndim == 3:
             crop = cv2.cvtColor(crop, cv2.COLOR_RGB2GRAY)
 
-        resized_crop = cv2.resize(crop, (64, 64), interpolation=cv2.INTER_AREA)
+        resized_crop = cv2.resize(crop, _MIN_BOARD_DIMS, interpolation=cv2.INTER_AREA)
         squares = resized_crop.reshape(8, 8, 8, 8).swapaxes(1, 2)
 
         medians = np.median(squares, axis=(2, 3))
@@ -164,28 +189,26 @@ class BoardDetector:
             )
         )
 
-        if contrast <= 20:
-            return None
-
-        if contrast > 40:
+        if contrast > _CONTRAST_THRESHOLD_HIGH:
             logger.debug("8x8 board check passed: contrast=%.2f", contrast)
             return contrast
 
-        dx, dy = cv2.spatialGradient(resized_crop)
-        gx = np.abs(dx).mean(axis=0)
-        gy = np.abs(dy).mean(axis=1)
+        if contrast > _CONTRAST_THRESHOLD_LOW:
+            dx, dy = cv2.spatialGradient(resized_crop)
+            gx = np.abs(dx).mean(axis=0)
+            gy = np.abs(dy).mean(axis=1)
 
-        ratio_x = gx[_GRID_INDICES].mean() / (gx[_MID_INDICES].mean() + 1e-5)
-        ratio_y = gy[_GRID_INDICES].mean() / (gy[_MID_INDICES].mean() + 1e-5)
+            ratio_x = gx[_GRID_INDICES].mean() / (gx[_MID_INDICES].mean() + 1e-5)
+            ratio_y = gy[_GRID_INDICES].mean() / (gy[_MID_INDICES].mean() + 1e-5)
 
-        if min(ratio_x, ratio_y) > 1.3:
-            logger.debug(
-                "8x8 board check passed: contrast=%.2f, ratio_x=%.2f, ratio_y=%.2f",
-                contrast,
-                ratio_x,
-                ratio_y,
-            )
-            return contrast
+            if min(ratio_x, ratio_y) > _GRID_RATIO_MIN:
+                logger.debug(
+                    "8x8 board check passed: contrast=%.2f, ratio_x=%.2f, ratio_y=%.2f",
+                    contrast,
+                    ratio_x,
+                    ratio_y,
+                )
+                return contrast
 
         return None
 
@@ -193,20 +216,8 @@ class BoardDetector:
     def _dewarp_quad(img: np.ndarray, quad_pts: np.ndarray) -> np.ndarray:
         s = quad_pts.sum(axis=1)
         diff = np.diff(quad_pts, axis=1)
-        src = np.array(
-            [
-                quad_pts[np.argmin(s)],
-                quad_pts[np.argmin(diff)],
-                quad_pts[np.argmax(s)],
-                quad_pts[np.argmax(diff)],
-            ],
-            dtype=np.float32,
-        )
-        dst = np.array(
-            [[0, 0], [BOARD_SIZE, 0], [BOARD_SIZE, BOARD_SIZE], [0, BOARD_SIZE]],
-            dtype=np.float32,
-        )
-        matrix = cv2.getPerspectiveTransform(src, dst)
+        src = quad_pts[[np.argmin(s), np.argmin(diff), np.argmax(s), np.argmax(diff)]]
+        matrix = cv2.getPerspectiveTransform(src, _DESTINATION_BOARD_QUAD)
         return cv2.warpPerspective(
             img, matrix, (BOARD_SIZE, BOARD_SIZE), flags=cv2.INTER_CUBIC
         )

@@ -15,6 +15,7 @@ def test_detect_board() -> None:
 
 def test_detect_no_board() -> None:
     assert detector.detect("tests/assets/square.png") == []
+    assert detector.detect(np.zeros((32, 32, 3), dtype=np.uint8)) == []
 
 
 def test_detect_crop_fallback(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -48,3 +49,16 @@ def test_snap_to_board_small() -> None:
         5,
         5,
     )
+
+
+def test_snap_to_board_no_matches() -> None:
+    assert BoardDetector._snap_to_board(np.full((100, 100), 255, dtype=np.uint8)) == (
+        0,
+        0,
+        100,
+        100,
+    )
+
+
+def test_is_8x8_board_low_contrast() -> None:
+    assert BoardDetector._is_8x8_board(np.full((64, 64), 128, dtype=np.uint8)) is None
