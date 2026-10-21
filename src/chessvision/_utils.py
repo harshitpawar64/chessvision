@@ -1,11 +1,8 @@
-import logging
 from importlib.resources import files
 from pathlib import Path
 
 import numpy as np
 from PIL import Image
-
-logger = logging.getLogger(__name__)
 
 
 def to_pil_image(image: Image.Image | Path | str | np.ndarray) -> Image.Image:
