@@ -1,6 +1,6 @@
 [project]
 name = "chessvision"
-version = "0.13.0"
+version = "0.13.1"
 description = "Chess board recognition toolkit"
 readme = "README.md"
 license = "GPL-3.0-only"
