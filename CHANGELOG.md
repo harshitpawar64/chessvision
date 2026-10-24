@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.13.2](https://github.com/harshitpawar64/chessvision/compare/v0.13.1...v0.13.2) (2026-10-24)
+
+
+### Documentation
+
+* **readme:** add Edge Add-ons store link ([d4b8de3](https://github.com/harshitpawar64/chessvision/commit/d4b8de3b0a26320c614b9bf0df0a5c44bfb43d75))
+* use imperative mood in CLI docstrings and fix README punctuation ([0496c67](https://github.com/harshitpawar64/chessvision/commit/0496c67c512445c87939ef969aa97fe3926efbcc))
+
 ## [0.13.1](https://github.com/harshitpawar64/chessvision/compare/v0.13.0...v0.13.1) (2026-10-21)
 
 
