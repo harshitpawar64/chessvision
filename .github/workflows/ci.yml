@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v7.0.1
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v10.3.0
+        uses: astral-sh/setup-uv@v10.3.1
         with:
           version: "latest-known"
 
@@ -41,7 +41,7 @@ jobs:
       - uses: actions/checkout@v7.0.1
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v10.3.0
+        uses: astral-sh/setup-uv@v10.3.1
         with:
           version: "latest-known"
 
@@ -56,7 +56,7 @@ jobs:
       - uses: actions/checkout@v7.0.1
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v10.3.0
+        uses: astral-sh/setup-uv@v10.3.1
         with:
           version: "latest-known"
 
