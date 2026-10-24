@@ -164,7 +164,7 @@ for prediction in batch_predictions:
 | **Flag**        | **Short** | **Default** | **Description**                                  |
 |-----------------|:---------:|:-----------:|--------------------------------------------------|
 | `--orientation` |    `-o`   |    `auto`   | Board perspective (`auto`, `white`, or `black`). |
-| `--turn`        |    `-t`   |    `auto`   | Side to move (`auto`, `white` or `black`).       |
+| `--turn`        |    `-t`   |    `auto`   | Side to move (`auto`, `white`, or `black`).      |
 | `--castling`    |    `-c`   |    `auto`   | Castling availability (see options below).       |
 | `--open`        |           |   `False`   | Open position directly in analysis board.        |
 | `--site`        |    `-s`   |  `lichess`  | Analysis platform (`chess.com` or `lichess`).    |

@@ -26,7 +26,7 @@ def pdf(
         bool, typer.Option("--verbose", "-v", help="Enable verbose logging.")
     ] = False,
 ) -> None:
-    """Predicts chess positions from a PDF document."""
+    """Predict chess positions from a PDF document."""
     setup_logging(verbose)
 
     pdf_predictor = PDFPredictor()

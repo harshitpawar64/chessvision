@@ -59,7 +59,7 @@ def board(
         bool, typer.Option("--verbose", "-v", help="Enable verbose logging.")
     ] = False,
 ) -> None:
-    """Predicts chess positions from a chessboard image."""
+    """Predict chess positions from a chessboard image."""
     setup_logging(verbose)
 
     if not image:
